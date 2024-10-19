@@ -2,6 +2,7 @@
 
 * Студент: [Антон Трочук](https://up.htmlacademy.ru/javascript/33/user/1029033).
 * Наставник: [Александр Сударев](https://htmlacademy.ru/profile/id1152185).
+* Мой проект: .
 
 ---
 
