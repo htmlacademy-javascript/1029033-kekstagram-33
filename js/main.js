@@ -25,14 +25,23 @@ const commentsDescription = function () {
   return comments;
 };
 
-const descriptionFoto = {
-  id: Math.round(Math.random() * (max - min + 1)) + min,
-  url: `photos/${ Math.round(Math.random() * (max - min + 1)) + min }.jpg`,
-  description: randomDescription[Math.floor(Math.random() * randomDescription.length)],
-  likes: Math.round(Math.random() * (maxLikes - minLikes + 1)) + minLikes,
-  comments: commentsDescription ()
+const object = function () {
+  const objectFoto = [];
+  const objectFotoCount = 25;
+  for (let i = 0; i < objectFotoCount; i++) {
+    objectFoto.push({
+      id: Math.round(Math.random() * (max - min + 1)) + min,
+      url: `photos/${ Math.round(Math.random() * (max - min + 1)) + min }.jpg`,
+      description: randomDescription[Math.floor(Math.random() * randomDescription.length)],
+      likes: Math.round(Math.random() * (maxLikes - minLikes + 1)) + minLikes,
+      comments: commentsDescription ()
+    });
+  }
+
+  return objectFoto;
 };
 
-console.log(descriptionFoto);
+
+console.log(object());
 
 
