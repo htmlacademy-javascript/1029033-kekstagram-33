@@ -1,5 +1,3 @@
-
-
 const min = 1;
 const max = 25;
 const minLikes = 1;
@@ -21,7 +19,6 @@ const commentsDescription = function () {
       name: nameComments[Math.floor(Math.random() * nameComments.length)],
     });
   }
-
   return comments;
 };
 
@@ -40,8 +37,6 @@ const object = function () {
 
   return objectFoto;
 };
-
-
 console.log(object());
 
 
