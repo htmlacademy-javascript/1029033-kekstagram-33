@@ -24,8 +24,8 @@ const commentsDescription = function () {
 
 const dataGeneration = function () {
   const photoInformation = [];
-  const objectFotoCount = 25;
-  for (let i = 0; i < objectFotoCount; i++) {
+  const OBJECT_FOTO_COUNT = 25;
+  for (let i = 0; i < OBJECT_FOTO_COUNT; i++) {
     photoInformation.push({
       id: Math.round(Math.random() * (MAX - MIN + 1)) + MIN,
       url: `photos/${ Math.round(Math.random() * (MAX - MIN + 1)) + MIN }.jpg`,
