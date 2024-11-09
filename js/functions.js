@@ -21,39 +21,22 @@ function isPalindrome (line) {
 }
 isPalindrome('анна'); */
 
-
 function timeForBusiness (startDay, endDay, startMeeting, duration) {
   const startDaySplit = startDay.split(':');
   const endDaySplit = endDay.split(':');
   const startMeetingSplit = startMeeting.split(':');
-  let hour = 0;
-  let minutes = 0;
+  const hourStartDay = Number(startDaySplit[0]) * 60 + Number(startDaySplit[1]);
+  const hourEndDay = Number(endDaySplit[0]) * 60 + Number(endDaySplit[1]);
+  const hourStartMeeting = Number(startMeetingSplit[0]) * 60 + Number(startMeetingSplit[1]);
 
-  for (let i = 1; (i + 60) - i <= duration; i++) {
-    duration = duration - 60;
-    hour = i;
-    minutes = duration;
-  }
-
-  const hourStartDay = Number(startDaySplit[0]);
-  const minutesStartDay = Number(startDaySplit[1]);
-
-  const hourEndDay = Number(endDaySplit[0]);
-  const minutesEndDay = Number(endDaySplit[1]);
-
-  const hourStartMeeting = Number(startMeetingSplit[0]);
-  const minutesStartMeeting = Number(startMeetingSplit[1]);
-
-  if (hourStartMeeting >= hourStartDay) {
-    if ((hourStartMeeting + hour) <= hourEndDay && (minutesStartMeeting + minutes) <= minutesEndDay) {
-      console.log('true');
+  if (hourStartDay <= hourStartMeeting) {
+    if ((hourStartMeeting + duration) <= hourEndDay) {
+      return 'true';
     } else {
-      console.log('false');
+      return 'false';
     }
   } else {
-    console.log('false');
+    return 'false';
   }
-
-
 }
-timeForBusiness('14:00', '17:30', '08:0', 90);
+timeForBusiness('8:00', '17:30', '08:00', 900);
