@@ -31,12 +31,12 @@ function timeForBusiness (startDay, endDay, startMeeting, duration) {
 
   if (hourStartDay <= hourStartMeeting) {
     if ((hourStartMeeting + duration) <= hourEndDay) {
-      return 'true';
+      return true;
     } else {
-      return 'false';
+      return false;
     }
   } else {
-    return 'false';
+    return false;
   }
 }
 timeForBusiness('8:00', '17:30', '08:00', 900);
