@@ -1,9 +1,9 @@
 import {dataGeneration} from './data.js';
+const photoData = dataGeneration();
 
 const addingPhoto = function () {
   const container = document.querySelector('.pictures');
   const fotoTemplate = document.querySelector('#picture').content.querySelector('.picture');
-  const photoData = dataGeneration();
 
   photoData.forEach((foto) => {
     const elementPhoto = fotoTemplate.cloneNode(true);

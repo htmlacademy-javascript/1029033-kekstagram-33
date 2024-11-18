@@ -14,7 +14,7 @@ const commentsDescription = function () {
   for (let i = 0; i < commentsCount; i++) {
     comments.push({
       id: i + 1,
-      avatar: `img/avatar-${ Math.round(Math.random() * (MAX - MIN + 1)) + MIN }.jpg`,
+      avatar: `img/avatar-${Math.floor(Math.random() * 6) + 1}.svg`,
       message: message[Math.floor(Math.random() * message.length)],
       name: nameComments[Math.floor(Math.random() * nameComments.length)],
     });
