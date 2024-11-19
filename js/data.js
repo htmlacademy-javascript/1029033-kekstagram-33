@@ -4,7 +4,7 @@ const MIN_LIKES = 1;
 const MAX_LIKES = 25;
 const MIN_COMMENTS = 0;
 const MAX_COMMENTS = 30;
-const randomDescription = ['На отдыхе', 'На даче', 'Рыбалка', 'Соревнования', 'На море', 'Кот'];
+const randomDescription = ['На отдыхе', 'На даче', 'Рыбалка', 'Соревнования'];
 const message = ['Всё отлично!','В целом всё неплохо. Но не всё.','Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.','Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.','Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.','Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 const nameComments = ['Антон', 'Егор', 'Иван', 'Аня', 'Ева', 'Саша'];
 
@@ -27,7 +27,7 @@ const dataGeneration = function () {
   const OBJECT_FOTO_COUNT = 25;
   for (let i = 0; i < OBJECT_FOTO_COUNT; i++) {
     photoInformation.push({
-      id: Math.round(Math.random() * (MAX - MIN + 1)) + MIN,
+      id: i + 1,
       url: `photos/${ Math.round(Math.random() * (MAX - MIN + 1)) + MIN }.jpg`,
       description: randomDescription[Math.floor(Math.random() * randomDescription.length)],
       likes: Math.round(Math.random() * (MAX_LIKES - MIN_LIKES + 1)) + MIN_LIKES,
@@ -38,6 +38,5 @@ const dataGeneration = function () {
   return photoInformation;
 };
 
-export {commentsDescription};
 export {dataGeneration};
 
