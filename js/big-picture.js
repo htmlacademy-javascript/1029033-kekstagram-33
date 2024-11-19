@@ -26,7 +26,6 @@ const showPhoto = function (photoData) {
       const photo = photoData[photoIndex];
 
       commentsList.innerHTML = '';
-
       dataGenerationComments.textContent = photo.comments.length;
 
       photo.comments.forEach((comment) => {
@@ -46,7 +45,6 @@ const showPhoto = function (photoData) {
 
         commentElement.appendChild(commentAvatar);
         commentElement.appendChild(commentText);
-
         commentsList.appendChild(commentElement);
       });
 
@@ -73,7 +71,6 @@ const showPhoto = function (photoData) {
         }
 
         commentsDisplayed += Math.min(COMMENTS_COUNT, hiddenComments.length);
-
         commentShown.textContent = commentsDisplayed;
 
         if (commentsDisplayed >= loadMoreComments.length) {
@@ -99,4 +96,4 @@ const showPhoto = function (photoData) {
   });
 };
 
-export { showPhoto };
+export {showPhoto};
