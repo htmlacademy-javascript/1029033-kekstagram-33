@@ -64,35 +64,35 @@ const handleLoadMoreComments = function (COMMENTS_COUNT) {
   });
 };
 
-const openBigPictureModal = function (bigPicture, dontScroll) {
+const openBigPictureModal = function (bigPicture, body) {
   bigPicture.classList.remove('hidden');
-  dontScroll.classList.add('modal-open');
+  body.classList.add('modal-open');
 };
 
-const closeBigPictureModal = function (bigPicture, dontScroll) {
+const closeBigPictureModal = function (bigPicture, body) {
   bigPicture.classList.add('hidden');
-  dontScroll.classList.remove('modal-open');
+  body.classList.remove('modal-open');
 };
 
-const addEventListeners = function (pictureItems, bigPicture, photoData, commentsList, dataGenerationComments, dontScroll, COMMENTS_COUNT) {
+const addEventListeners = function (pictureItems, bigPicture, photoData, commentsList, dataGenerationComments, body, COMMENTS_COUNT) {
   pictureItems.forEach((pictureItem, index) => {
     pictureItem.addEventListener('click', () => {
       const photo = photoData[index];
       updateBigPicture(photo, bigPicture, commentsList, dataGenerationComments);
       handleLoadMoreComments(COMMENTS_COUNT);
-      openBigPictureModal(bigPicture, dontScroll);
+      openBigPictureModal(bigPicture, body);
     });
   });
 };
 
-const addCloseEventListeners = function (closeBigPicture, bigPicture, dontScroll) {
+const addCloseEventListeners = function (closeBigPicture, bigPicture, body) {
   closeBigPicture.addEventListener('click', () => {
-    closeBigPictureModal(bigPicture, dontScroll);
+    closeBigPictureModal(bigPicture, body);
   });
 
   document.addEventListener('keydown', (evt) => {
     if (evt.keyCode === 27) {
-      closeBigPictureModal(bigPicture, dontScroll);
+      closeBigPictureModal(bigPicture, body);
     }
   });
 };
