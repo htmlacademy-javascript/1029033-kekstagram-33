@@ -1,4 +1,18 @@
-const updateBigPicture = function (photo, bigPicture, commentsList, dataGenerationComments) {
+
+const bigPicture = document.querySelector('.big-picture');
+const closeBigPicture = document.querySelector('.big-picture__cancel');
+const body = document.querySelector('body');
+const commentsList = bigPicture.querySelector('.social__comments');
+const dataGenerationComments = document.querySelector('.social__comment-total-count');
+const loadMoreButton = document.querySelector('.comments-loader');
+const commentShown = document.querySelector('.social__comment-shown-count');
+const COMMENTS_COUNT = 5;
+let pictureItems;
+let photoData;
+
+let loadMoreButtonClickListener;
+
+const renderBigPicture = function (photo) {
   const bigImage = bigPicture.querySelector('img');
   bigImage.src = photo.url;
 
@@ -32,10 +46,8 @@ const updateBigPicture = function (photo, bigPicture, commentsList, dataGenerati
   });
 };
 
-const handleLoadMoreComments = function (COMMENTS_COUNT) {
+const hideExcessComments = function () {
   const loadMoreComments = document.querySelectorAll('.social__comment');
-  const loadMoreButton = document.querySelector('.comments-loader');
-  const commentShown = document.querySelector('.social__comment-shown-count');
 
   if (loadMoreComments.length > COMMENTS_COUNT) {
     for (let i = COMMENTS_COUNT; i < loadMoreComments.length; i++) {
@@ -47,10 +59,13 @@ const handleLoadMoreComments = function (COMMENTS_COUNT) {
     loadMoreButton.classList.add('hidden');
     commentShown.textContent = loadMoreComments.length;
   }
+};
 
+const loadMoreCommentsHandler = function () {
+  const loadMoreComments = document.querySelectorAll('.social__comment');
   let commentsDisplayed = COMMENTS_COUNT;
 
-  loadMoreButton.addEventListener('click', () => {
+  loadMoreButtonClickListener = () => {
     const hiddenComments = document.querySelectorAll('.social__comment.hidden');
     for (let i = 0; i < COMMENTS_COUNT && i < hiddenComments.length; i++) {
       hiddenComments[i].classList.remove('hidden');
@@ -61,53 +76,62 @@ const handleLoadMoreComments = function (COMMENTS_COUNT) {
     if (commentsDisplayed >= loadMoreComments.length) {
       loadMoreButton.classList.add('hidden');
     }
-  });
+  };
+
+  loadMoreButton.addEventListener('click', loadMoreButtonClickListener);
 };
 
-const openBigPictureModal = function (bigPicture, body) {
+const removeLoadMoreCommentsHandler = function () {
+  loadMoreButton.removeEventListener('click', loadMoreButtonClickListener);
+};
+
+
+const handleLoadMoreComments = function () {
+  hideExcessComments();
+  loadMoreCommentsHandler();
+};
+
+
+const openBigPictureModal = function () {
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
 };
 
-const closeBigPictureModal = function (bigPicture, body) {
+const closeBigPictureModal = function () {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
+  removeLoadMoreCommentsHandler();
 };
 
-const addEventListeners = function (pictureItems, bigPicture, photoData, commentsList, dataGenerationComments, body, COMMENTS_COUNT) {
+const addEventListeners = function () {
   pictureItems.forEach((pictureItem, index) => {
     pictureItem.addEventListener('click', () => {
       const photo = photoData[index];
-      updateBigPicture(photo, bigPicture, commentsList, dataGenerationComments);
-      handleLoadMoreComments(COMMENTS_COUNT);
-      openBigPictureModal(bigPicture, body);
+      renderBigPicture(photo);
+      handleLoadMoreComments();
+      openBigPictureModal();
     });
   });
 };
 
-const addCloseEventListeners = function (closeBigPicture, bigPicture, body) {
+const addCloseEventListeners = function () {
   closeBigPicture.addEventListener('click', () => {
-    closeBigPictureModal(bigPicture, body);
+    closeBigPictureModal();
   });
 
   document.addEventListener('keydown', (evt) => {
     if (evt.keyCode === 27) {
-      closeBigPictureModal(bigPicture, body);
+      closeBigPictureModal();
+      removeLoadMoreCommentsHandler();
     }
   });
 };
 
-const showPhoto = function (photoData) {
-  const bigPicture = document.querySelector('.big-picture');
-  const closeBigPicture = document.querySelector('.big-picture__cancel');
-  const body = document.querySelector('body');
-  const pictureItems = document.querySelectorAll('.picture');
-  const commentsList = bigPicture.querySelector('.social__comments');
-  const dataGenerationComments = document.querySelector('.social__comment-total-count');
-  const COMMENTS_COUNT = 5;
-
-  addEventListeners(pictureItems, bigPicture, photoData, commentsList, dataGenerationComments, body, COMMENTS_COUNT);
-  addCloseEventListeners(closeBigPicture, bigPicture, body);
+const showPhoto = function (data) {
+  photoData = data;
+  pictureItems = document.querySelectorAll('.picture');
+  addEventListeners();
+  addCloseEventListeners();
 };
 
 export { showPhoto };
