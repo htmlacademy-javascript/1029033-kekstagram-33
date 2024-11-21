@@ -1,18 +1,12 @@
-const updateBigPicture = function (picture, bigPicture, photoData, commentsList, dataGenerationComments, pictureItems) {
-  const imageUrl = picture.querySelector('img').src;
+const updateBigPicture = function (photo, bigPicture, commentsList, dataGenerationComments) {
   const bigImage = bigPicture.querySelector('img');
-  bigImage.src = imageUrl;
+  bigImage.src = photo.url;
 
-  const photoDescription = picture.querySelector('img').alt;
   const dataGenerationDescription = bigPicture.querySelector('.social__header .social__caption');
-  dataGenerationDescription.textContent = photoDescription;
+  dataGenerationDescription.textContent = photo.description;
 
-  const photoLikes = picture.querySelector('.picture__likes');
   const dataGenerationLikes = bigPicture.querySelector('.social__header .likes-count');
-  dataGenerationLikes.textContent = photoLikes.textContent;
-
-  const photoIndex = Array.from(pictureItems).indexOf(picture);
-  const photo = photoData[photoIndex];
+  dataGenerationLikes.textContent = photo.likes;
 
   commentsList.innerHTML = '';
   dataGenerationComments.textContent = photo.comments.length;
@@ -56,7 +50,6 @@ const handleLoadMoreComments = function (COMMENTS_COUNT) {
 
   let commentsDisplayed = COMMENTS_COUNT;
 
-
   loadMoreButton.addEventListener('click', () => {
     const hiddenComments = document.querySelectorAll('.social__comment.hidden');
     for (let i = 0; i < COMMENTS_COUNT && i < hiddenComments.length; i++) {
@@ -69,7 +62,6 @@ const handleLoadMoreComments = function (COMMENTS_COUNT) {
       loadMoreButton.classList.add('hidden');
     }
   });
-
 };
 
 const openBigPictureModal = function (bigPicture, dontScroll) {
@@ -83,10 +75,10 @@ const closeBigPictureModal = function (bigPicture, dontScroll) {
 };
 
 const addEventListeners = function (pictureItems, bigPicture, photoData, commentsList, dataGenerationComments, dontScroll, COMMENTS_COUNT) {
-  pictureItems.forEach((pictureItem) => {
-    pictureItem.addEventListener('click', (evt) => {
-      const picture = evt.target.closest('.picture');
-      updateBigPicture(picture, bigPicture, photoData, commentsList, dataGenerationComments, pictureItems);
+  pictureItems.forEach((pictureItem, index) => {
+    pictureItem.addEventListener('click', () => {
+      const photo = photoData[index];
+      updateBigPicture(photo, bigPicture, commentsList, dataGenerationComments);
       handleLoadMoreComments(COMMENTS_COUNT);
       openBigPictureModal(bigPicture, dontScroll);
     });
@@ -98,7 +90,7 @@ const addCloseEventListeners = function (closeBigPicture, bigPicture, dontScroll
     closeBigPictureModal(bigPicture, dontScroll);
   });
 
-  closeBigPicture.addEventListener('keydown', (evt) => {
+  document.addEventListener('keydown', (evt) => {
     if (evt.keyCode === 27) {
       closeBigPictureModal(bigPicture, dontScroll);
     }
@@ -108,14 +100,14 @@ const addCloseEventListeners = function (closeBigPicture, bigPicture, dontScroll
 const showPhoto = function (photoData) {
   const bigPicture = document.querySelector('.big-picture');
   const closeBigPicture = document.querySelector('.big-picture__cancel');
-  const dontScroll = document.querySelector('body');
+  const body = document.querySelector('body');
   const pictureItems = document.querySelectorAll('.picture');
   const commentsList = bigPicture.querySelector('.social__comments');
   const dataGenerationComments = document.querySelector('.social__comment-total-count');
   const COMMENTS_COUNT = 5;
 
-  addEventListeners(pictureItems, bigPicture, photoData, commentsList, dataGenerationComments, dontScroll, COMMENTS_COUNT);
-  addCloseEventListeners(closeBigPicture, bigPicture, dontScroll);
+  addEventListeners(pictureItems, bigPicture, photoData, commentsList, dataGenerationComments, body, COMMENTS_COUNT);
+  addCloseEventListeners(closeBigPicture, bigPicture, body);
 };
 
-export { showPhoto, updateBigPicture, handleLoadMoreComments, openBigPictureModal, closeBigPictureModal, addEventListeners, addCloseEventListeners };
+export { showPhoto };
