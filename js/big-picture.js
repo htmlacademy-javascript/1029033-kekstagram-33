@@ -1,102 +1,137 @@
-const showPhoto = function (photoData) {
-  const bigPicture = document.querySelector('.big-picture');
-  const closeBigPicture = document.querySelector('.big-picture__cancel');
-  const dontScroll = document.querySelector('body');
-  const pictureItems = document.querySelectorAll('.picture');
-  const commentsList = bigPicture.querySelector('.social__comments');
-  const dataGenerationComments = document.querySelector('.social__comment-total-count');
-  const COMMENTS_COUNT = 5;
 
-  pictureItems.forEach((pictureItem) => {
-    pictureItem.addEventListener('click', (evt) => {
-      const picture = evt.target.closest('.picture');
-      const imageUrl = picture.querySelector('img').src;
-      const bigImage = bigPicture.querySelector('img');
-      bigImage.src = imageUrl;
+const bigPicture = document.querySelector('.big-picture');
+const closeBigPicture = document.querySelector('.big-picture__cancel');
+const body = document.querySelector('body');
+const commentsList = bigPicture.querySelector('.social__comments');
+const dataGenerationComments = document.querySelector('.social__comment-total-count');
+const loadMoreButton = document.querySelector('.comments-loader');
+const commentShown = document.querySelector('.social__comment-shown-count');
+const COMMENTS_COUNT = 5;
+let pictureItems;
+let photoData;
 
-      const photoDescription = picture.querySelector('img').alt;
-      const dataGenerationDescription = bigPicture.querySelector('.social__header .social__caption');
-      dataGenerationDescription.textContent = photoDescription;
+let loadMoreButtonClickListener;
 
-      const photoLikes = picture.querySelector('.picture__likes');
-      const dataGenerationLikes = bigPicture.querySelector('.social__header .likes-count');
-      dataGenerationLikes.textContent = photoLikes.textContent;
+const renderBigPicture = function (photo) {
+  const bigImage = bigPicture.querySelector('img');
+  bigImage.src = photo.url;
 
-      const photoIndex = Array.from(pictureItems).indexOf(pictureItem);
-      const photo = photoData[photoIndex];
+  const dataGenerationDescription = bigPicture.querySelector('.social__header .social__caption');
+  dataGenerationDescription.textContent = photo.description;
 
-      commentsList.innerHTML = '';
+  const dataGenerationLikes = bigPicture.querySelector('.social__header .likes-count');
+  dataGenerationLikes.textContent = photo.likes;
 
-      dataGenerationComments.textContent = photo.comments.length;
+  commentsList.innerHTML = '';
+  dataGenerationComments.textContent = photo.comments.length;
 
-      photo.comments.forEach((comment) => {
-        const commentElement = document.createElement('li');
-        commentElement.classList.add('social__comment');
+  photo.comments.forEach((comment) => {
+    const commentElement = document.createElement('li');
+    commentElement.classList.add('social__comment');
 
-        const commentAvatar = document.createElement('img');
-        commentAvatar.classList.add('social__picture');
-        commentAvatar.src = comment.avatar;
-        commentAvatar.alt = comment.name;
-        commentAvatar.width = 35;
-        commentAvatar.height = 35;
+    const commentAvatar = document.createElement('img');
+    commentAvatar.classList.add('social__picture');
+    commentAvatar.src = comment.avatar;
+    commentAvatar.alt = comment.name;
+    commentAvatar.width = 35;
+    commentAvatar.height = 35;
 
-        const commentText = document.createElement('p');
-        commentText.classList.add('social__text');
-        commentText.textContent = comment.message;
+    const commentText = document.createElement('p');
+    commentText.classList.add('social__text');
+    commentText.textContent = comment.message;
 
-        commentElement.appendChild(commentAvatar);
-        commentElement.appendChild(commentText);
+    commentElement.appendChild(commentAvatar);
+    commentElement.appendChild(commentText);
+    commentsList.appendChild(commentElement);
+  });
+};
 
-        commentsList.appendChild(commentElement);
-      });
+const hideExcessComments = function () {
+  const loadMoreComments = document.querySelectorAll('.social__comment');
 
-      const loadMoreComments = document.querySelectorAll('.social__comment');
-      const loadMoreButton = document.querySelector('.comments-loader');
-      const commentShown = document.querySelector('.social__comment-shown-count');
+  if (loadMoreComments.length > COMMENTS_COUNT) {
+    for (let i = COMMENTS_COUNT; i < loadMoreComments.length; i++) {
+      loadMoreComments[i].classList.add('hidden');
+    }
+    loadMoreButton.classList.remove('hidden');
+    commentShown.textContent = COMMENTS_COUNT;
+  } else {
+    loadMoreButton.classList.add('hidden');
+    commentShown.textContent = loadMoreComments.length;
+  }
+};
 
-      if (loadMoreComments.length > COMMENTS_COUNT) {
-        for (let i = COMMENTS_COUNT; i < loadMoreComments.length; i++) {
-          loadMoreComments[i].classList.add('hidden');
-        }
-        loadMoreButton.classList.remove('hidden');
-      } else {
-        loadMoreButton.classList.add('hidden');
-        commentShown.textContent = loadMoreComments.length;
-      }
-      let commentsDisplayed = COMMENTS_COUNT;
-      commentShown.textContent = COMMENTS_COUNT;
-      loadMoreButton.addEventListener('click', () => {
-        const hiddenComments = document.querySelectorAll('.social__comment.hidden');
+const loadMoreCommentsHandler = function () {
+  const loadMoreComments = document.querySelectorAll('.social__comment');
+  let commentsDisplayed = COMMENTS_COUNT;
 
-        for (let i = 0; i < COMMENTS_COUNT && i < hiddenComments.length; i++) {
-          hiddenComments[i].classList.remove('hidden');
-        }
+  loadMoreButtonClickListener = () => {
+    const hiddenComments = document.querySelectorAll('.social__comment.hidden');
+    for (let i = 0; i < COMMENTS_COUNT && i < hiddenComments.length; i++) {
+      hiddenComments[i].classList.remove('hidden');
+    }
+    commentsDisplayed += Math.min(COMMENTS_COUNT, hiddenComments.length);
+    commentShown.textContent = commentsDisplayed;
 
-        commentsDisplayed += Math.min(COMMENTS_COUNT, hiddenComments.length);
+    if (commentsDisplayed >= loadMoreComments.length) {
+      loadMoreButton.classList.add('hidden');
+    }
+  };
 
-        commentShown.textContent = commentsDisplayed;
+  loadMoreButton.addEventListener('click', loadMoreButtonClickListener);
+};
 
-        if (commentsDisplayed >= loadMoreComments.length) {
-          loadMoreButton.classList.add('hidden');
-        }
-      });
+const removeLoadMoreCommentsHandler = function () {
+  loadMoreButton.removeEventListener('click', loadMoreButtonClickListener);
+};
 
-      bigPicture.classList.remove('hidden');
-      dontScroll.classList.add('modal-open');
+
+const handleLoadMoreComments = function () {
+  hideExcessComments();
+  loadMoreCommentsHandler();
+};
+
+
+const openBigPictureModal = function () {
+  bigPicture.classList.remove('hidden');
+  body.classList.add('modal-open');
+};
+
+const closeBigPictureModal = function () {
+  bigPicture.classList.add('hidden');
+  body.classList.remove('modal-open');
+  removeLoadMoreCommentsHandler();
+};
+
+const addEventListeners = function () {
+  pictureItems.forEach((pictureItem, index) => {
+    pictureItem.addEventListener('click', () => {
+      const photo = photoData[index];
+      renderBigPicture(photo);
+      handleLoadMoreComments();
+      openBigPictureModal();
     });
   });
+};
 
+const addCloseEventListeners = function () {
   closeBigPicture.addEventListener('click', () => {
-    bigPicture.classList.add('hidden');
-    dontScroll.classList.remove('modal-open');
+    closeBigPictureModal();
   });
 
-  closeBigPicture.addEventListener('keydown', (evt) => {
+  document.addEventListener('keydown', (evt) => {
     if (evt.keyCode === 27) {
-      bigPicture.classList.add('hidden');
-      dontScroll.classList.remove('modal-open');
+      closeBigPictureModal();
+      removeLoadMoreCommentsHandler();
     }
   });
+};
+
+const showPhoto = function (data) {
+  photoData = data;
+  pictureItems = document.querySelectorAll('.picture');
+  addEventListeners();
+  addCloseEventListeners();
 };
 
 export { showPhoto };
