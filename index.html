@@ -12,6 +12,8 @@
   <script src="/js/data.js" type="module"></script>
   <script src="/js/util.js" type="module"></script>
   <script src="/js/photo-generation" type="module"></script>
+  <script src="/js/validation.js" type="module"></script>
+  <script src="/js/adding-new-photo.js" type="module"></script>
   <title>Кекстаграм</title>
 </head>
 
@@ -36,7 +38,7 @@
       <section class="img-upload">
         <div class="img-upload__wrapper">
           <h2 class="img-upload__title  visually-hidden">Загрузка фотографии</h2>
-          <form class="img-upload__form" id="upload-select-image" autocomplete="off">
+          <form class="img-upload__form" id="upload-select-image" autocomplete="off" method="post" enctype="multipart/form-data" action="https://32.javascript.htmlacademy.pro/kekstagram">
 
             <!-- Изначальное состояние поля для загрузки изображения -->
             <fieldset class="img-upload__start">
