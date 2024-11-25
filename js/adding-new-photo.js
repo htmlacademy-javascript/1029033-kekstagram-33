@@ -3,7 +3,6 @@ const openForm = document.querySelector('.img-upload__overlay.hidden');
 const uploadInput = document.getElementById('upload-file');
 const closeForm = document.getElementById('upload-cancel');
 const form = document.querySelector('.img-upload__form');
-const submitButton = document.querySelector('.img-upload__submit');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
 const previewImage = document.querySelector('.img-upload__preview img');
@@ -109,10 +108,10 @@ form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
-    console.log('Форма валидна, можно отправлять');
+    return 'Форма валидна, можно отправлять';
 
   } else {
-    console.log('Форма не валидна');
+    return 'Форма не валидна';
   }
 });
 
