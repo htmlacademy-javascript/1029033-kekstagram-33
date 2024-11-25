@@ -1,16 +1,20 @@
 const body = document.querySelector('body');
+const uploadPreview = document.querySelector('.img-upload');
 const openForm = document.querySelector('.img-upload__overlay.hidden');
-const uploadInput = document.getElementById('upload-file');
-const closeForm = document.getElementById('upload-cancel');
-const form = document.querySelector('.img-upload__form');
-const textHashtags = document.querySelector('.text__hashtags');
-const textDescription = document.querySelector('.text__description');
-const previewImage = document.querySelector('.img-upload__preview img');
-const effectPreviews = document.querySelectorAll('.effects__preview');
+const uploadInputDOMElement = document.getElementById('upload-file');
+const closeFormDOMElement = document.getElementById('upload-cancel');
+const formDOMElement = uploadPreview.querySelector('.img-upload__form');
+const textHashtagsDOMElement = uploadPreview.querySelector('.text__hashtags');
+const textDescriptionDOMElement = uploadPreview.querySelector('.text__description');
+const previewImageDOMElement = uploadPreview.querySelector('.img-upload__preview img');
+const effectPreviewsDOMElement = uploadPreview.querySelectorAll('.effects__preview');
+const COMMENTS_ERROR_MESSAGE = 'Комментарий не может превышать 140 символов.';
+const HASHTAGS_ERROR_MESSAGE = 'Хэш-теги должны начинаться с "#" и не содержать специальных символов, кроме букв и цифр. Максимальная длина хэштега — 20 символов.';
+const COMMENTS_ERROR_LENGTH = 140;
 
 
 const showImagePreview = function () {
-  const file = uploadInput.files[0];
+  const file = uploadInputDOMElement.files[0];
   if (file) {
     const reader = new FileReader();
 
@@ -18,10 +22,10 @@ const showImagePreview = function () {
       const imageUrl = evt.target.result;
 
 
-      previewImage.src = imageUrl;
+      previewImageDOMElement.src = imageUrl;
 
 
-      effectPreviews.forEach((preview) => {
+      effectPreviewsDOMElement.forEach((preview) => {
 
         const img = preview.querySelector('img');
         if (img) {
@@ -37,22 +41,21 @@ const showImagePreview = function () {
   }
 };
 
-const clickOpenForm = function () {
-  uploadInput.addEventListener('change', () => {
+const clickOpenForm = () => {
+  uploadInputDOMElement.addEventListener('change', () => {
     openForm.classList.remove('hidden');
     body.classList.add('modal-open');
     showImagePreview();
   });
 };
 
-const clickCloseForm = function () {
+const clickCloseForm = () => {
   openForm.classList.add('hidden');
   body.classList.remove('modal-open');
 };
 
-// Закрытие формы
-const closeEventListeners = function () {
-  closeForm.addEventListener('click', () => {
+const closeEventListeners = () => {
+  closeFormDOMElement.addEventListener('click', () => {
     clickCloseForm();
   });
 
@@ -82,29 +85,29 @@ const validateHashtags = (value) => {
 };
 
 const validateComment = (value) =>
-  value.length <= 140;
+  value.length <= COMMENTS_ERROR_LENGTH;
 
-const pristine = new Pristine(form, {
+const pristine = new Pristine(formDOMElement, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper--error'
 });
 
 pristine.addValidator(
-  textHashtags,
+  textHashtagsDOMElement,
   validateHashtags,
-  'Хэш-теги должны начинаться с "#" и не содержать специальных символов, кроме букв и цифр. Максимальная длина хэштега — 20 символов.',
+  HASHTAGS_ERROR_MESSAGE,
   1
 );
 
 pristine.addValidator(
-  textDescription,
+  textDescriptionDOMElement,
   validateComment,
-  'Комментарий не может превышать 140 символов.',
+  COMMENTS_ERROR_MESSAGE,
   2
 );
 
-form.addEventListener('submit', (evt) => {
+formDOMElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
@@ -116,7 +119,7 @@ form.addEventListener('submit', (evt) => {
 });
 
 document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape' && (document.activeElement === textHashtags || document.activeElement === textDescription)) {
+  if (evt.key === 'Escape' && (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
     evt.stopPropagation();
   }
 });
