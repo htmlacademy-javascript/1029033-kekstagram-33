@@ -6,12 +6,27 @@ const form = document.querySelector('.img-upload__form');
 const submitButton = document.querySelector('.img-upload__submit');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
+const previewImage = document.querySelector('.img-upload__preview img');
 
+
+const showImagePreview = function () {
+  const file = uploadInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function (evt) {
+      previewImage.src = evt.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+};
 
 const clickOpenForm = function () {
   uploadInput.addEventListener('change', () => {
     openForm.classList.remove('hidden');
     body.classList.add('modal-open');
+    showImagePreview();
   });
 };
 
@@ -20,6 +35,7 @@ const clickCloseForm = function () {
   body.classList.remove('modal-open');
 };
 
+// Закрытие формы
 const closeEventListeners = function () {
   closeForm.addEventListener('click', () => {
     clickCloseForm();
@@ -32,14 +48,12 @@ const closeEventListeners = function () {
   });
 };
 
-
 const validateHashtags = (value) => {
   if (!value) {
     return true;
-  } // Хэш-теги необязательны, если поле пустое, считаем, что валидация пройдена.
+  }
 
-  const hashtags = value.split(' ').map((tag) => tag.toLowerCase()); // Приводим к нижнему регистру для нечувствительности к регистру.
-
+  const hashtags = value.split(' ').map((tag) => tag.toLowerCase());
   if (hashtags.length > 5) {
     return false;
   }
@@ -53,9 +67,7 @@ const validateHashtags = (value) => {
 };
 
 const validateComment = (value) =>
-  value.length <= 140 // Комментарий не должен превышать 140 символов
-;
-
+  value.length <= 140;
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -82,7 +94,7 @@ form.addEventListener('submit', (evt) => {
   const isValid = pristine.validate();
   if (isValid) {
     console.log('Форма валидна, можно отправлять');
-    // Отправка данных или другие действия
+
   } else {
     console.log('Форма не валидна');
   }
@@ -94,4 +106,4 @@ document.addEventListener('keydown', (evt) => {
   }
 });
 
-export {clickOpenForm, clickCloseForm, closeEventListeners};
+export { clickOpenForm, clickCloseForm, closeEventListeners };
