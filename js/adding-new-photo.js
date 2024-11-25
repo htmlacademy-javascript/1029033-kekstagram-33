@@ -7,6 +7,7 @@ const submitButton = document.querySelector('.img-upload__submit');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
 const previewImage = document.querySelector('.img-upload__preview img');
+const effectPreviews = document.querySelectorAll('.effects__preview');
 
 
 const showImagePreview = function () {
@@ -15,7 +16,22 @@ const showImagePreview = function () {
     const reader = new FileReader();
 
     reader.onload = function (evt) {
-      previewImage.src = evt.target.result;
+      const imageUrl = evt.target.result;
+
+
+      previewImage.src = imageUrl;
+
+
+      effectPreviews.forEach((preview) => {
+
+        const img = preview.querySelector('img');
+        if (img) {
+          img.src = imageUrl;
+        } else {
+
+          preview.style.backgroundImage = `url(${imageUrl})`;
+        }
+      });
     };
 
     reader.readAsDataURL(file);
