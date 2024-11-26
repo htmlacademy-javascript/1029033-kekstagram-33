@@ -54,7 +54,7 @@ const applyFilter = (value) => {
 
 slider.noUiSlider.on('update', () => {
   const changeValue = slider.noUiSlider.get();
-  valueEffects.textContent = changeValue; //не работает через .value, значение не отображается
+  valueEffects.textContent = changeValue; //не работает через .value, значение не отображается!
   console.log('Слайдер обновлен:', changeValue);
 
 
