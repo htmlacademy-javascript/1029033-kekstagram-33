@@ -41,7 +41,7 @@ const showImagePreview = function () {
   }
 };
 
-const clickOpenForm = () => {
+const registerHendlerModalForm = () => {
   uploadInputDOMElement.addEventListener('change', () => {
     openForm.classList.remove('hidden');
     body.classList.add('modal-open');
@@ -52,9 +52,10 @@ const clickOpenForm = () => {
 const clickCloseForm = () => {
   openForm.classList.add('hidden');
   body.classList.remove('modal-open');
+  document.querySelector('.img-upload__form').reset();
 };
 
-const closeEventListeners = () => {
+const registercloseEventListeners = () => {
   closeFormDOMElement.addEventListener('click', () => {
     clickCloseForm();
   });
@@ -124,4 +125,4 @@ document.addEventListener('keydown', (evt) => {
   }
 });
 
-export { clickOpenForm, clickCloseForm, closeEventListeners };
+export { registerHendlerModalForm, clickCloseForm, registercloseEventListeners };

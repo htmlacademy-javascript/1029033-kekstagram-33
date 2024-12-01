@@ -2,7 +2,7 @@ const imgUpload = document.querySelector('.img-upload__overlay');
 const valueEffects = imgUpload.querySelector('.effect-level__value');
 const effectsItems = imgUpload.querySelectorAll('.effects__item');
 const slider = imgUpload.querySelector('.effect-level__slider');
-const preview = imgUpload.querySelector('.img-upload__preview');
+const preview = imgUpload.querySelector('.img-upload__preview img');
 
 
 const ORIGINAL = 0;
