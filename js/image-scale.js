@@ -3,7 +3,7 @@ const uploadContainer = document.querySelector('.img-upload__preview-container')
 const sliderElementBiggerDOMElement = uploadContainer.querySelector('.scale__control--bigger');
 const sliderElementSmallerDOMElement = uploadContainer.querySelector('.scale__control--smaller');
 const sliderValueDOMElement = uploadContainer.querySelector('.scale__control--value');
-const imageDOMElement = uploadContainer.querySelector('.img-upload__preview');
+const imageDOMElement = uploadContainer.querySelector('.img-upload__preview img');
 const CONVERSION_PERCENTAGE = 100;
 const SLIDER_STEP = 25;
 
