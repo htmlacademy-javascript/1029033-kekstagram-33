@@ -105,7 +105,6 @@ const sendingData = (onSuccess) => {
     })
       .then((response) => {
         if (!response.ok) {
-        // Если сервер вернул ошибку, отклоняем промис
           return Promise.reject('Ошибка на сервере');
         }
         return response.json();
