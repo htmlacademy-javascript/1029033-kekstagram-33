@@ -134,4 +134,4 @@ const showPhoto = function (data) {
   addCloseEventListeners();
 };
 
-export { showPhoto };
+export { showPhoto, openBigPictureModal, closeBigPictureModal };

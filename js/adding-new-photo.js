@@ -8,6 +8,7 @@ const textHashtagsDOMElement = uploadPreview.querySelector('.text__hashtags');
 const textDescriptionDOMElement = uploadPreview.querySelector('.text__description');
 const previewImageDOMElement = uploadPreview.querySelector('.img-upload__preview img');
 const effectPreviewsDOMElement = uploadPreview.querySelectorAll('.effects__preview');
+const buttonSubmitDOMElement = document.querySelector('.img-upload__submit');
 const COMMENTS_ERROR_MESSAGE = 'Комментарий не может превышать 140 символов.';
 const HASHTAGS_ERROR_MESSAGE = 'Хэш-теги должны начинаться с "#" и не содержать специальных символов, кроме букв и цифр. Максимальная длина хэштега — 20 символов.';
 const COMMENTS_ERROR_LENGTH = 140;
@@ -122,6 +123,28 @@ formDOMElement.addEventListener('submit', (evt) => {
 document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape' && (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
     evt.stopPropagation();
+  }
+});
+
+const toggleSubmitButton = () => {
+  if (pristine.validate()) {
+    buttonSubmitDOMElement.disabled = false;
+  } else {
+    buttonSubmitDOMElement.disabled = true;
+  }
+};
+
+formDOMElement.addEventListener('input', toggleSubmitButton);
+
+toggleSubmitButton();
+
+formDOMElement.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    console.log('Форма валидна, можно отправлять');
+  } else {
+    console.log('Форма не валидна');
   }
 });
 

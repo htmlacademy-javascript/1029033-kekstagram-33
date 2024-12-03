@@ -1,15 +1,10 @@
-import {dataGeneration} from './data.js';
-import {addingPhoto} from './photo-generation.js';
-import {showPhoto} from './big-picture.js';
-import {registerHendlerModalForm, registercloseEventListeners} from './adding-new-photo.js';
+import {registerHendlerModalForm, clickCloseForm, registercloseEventListeners} from './adding-new-photo.js';
 import {imageScale} from './image-scale.js';
 import {overlayEffect} from './foto-effect.js';
+import {getData, sendingData} from './interaction-server.js';
 
-
-const photoData = dataGeneration();
-
-addingPhoto(photoData);
-showPhoto(photoData);
+getData();
+sendingData(clickCloseForm);
 registerHendlerModalForm();
 registercloseEventListeners();
 imageScale();
