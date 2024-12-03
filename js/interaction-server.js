@@ -1,5 +1,6 @@
 import {addingPhoto} from './photo-generation.js';
 import {showPhoto} from './big-picture.js';
+import {showFilter} from './filter.js';
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
@@ -88,6 +89,7 @@ const getData = () => {
     .then((data) => {
       addingPhoto(data);
       showPhoto(data);
+      showFilter();
     });
 };
 
