@@ -6,12 +6,13 @@ const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorLoading = document.querySelector('#data-error').content.querySelector('.data-error');
 let successElement;
 let errorElement;
+let errorLoadingElement;
 const filterDefault = document.getElementById('filter-default');
 const filterRandom = document.getElementById('filter-random');
 const filterDiscussed = document.getElementById('filter-discussed');
-const cleaning = document.querySelector('.picture');
 
 
 const additionSuccessForm = () => {
@@ -55,6 +56,11 @@ const closeEventListeners = () => {
 const additionErorForm = () => {
   errorElement = errorTemplate.cloneNode(true);
   body.appendChild(errorElement);
+};
+
+const errorLoadingForm = () => {
+  errorLoadingElement = errorLoading.cloneNode(true);
+  body.appendChild(errorLoadingElement);
 };
 
 const clickCloseErrorForm = () => {
@@ -106,6 +112,10 @@ const getData = () => {
       showPhoto(data);
       showFilter();
       filterClick();
+    })
+    .catch((error) => {
+      console.log(error);
+      errorLoadingForm();
     });
 };
 
