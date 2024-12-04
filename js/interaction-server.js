@@ -1,6 +1,6 @@
 import {addingPhoto} from './photo-generation.js';
 import {showPhoto} from './big-picture.js';
-import {showFilter} from './filter.js';
+import {showFilter, filterClick} from './filter.js';
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
@@ -8,6 +8,11 @@ const successTemplate = document.querySelector('#success').content.querySelector
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 let successElement;
 let errorElement;
+const filterDefault = document.getElementById('filter-default');
+const filterRandom = document.getElementById('filter-random');
+const filterDiscussed = document.getElementById('filter-discussed');
+const cleaning = document.querySelector('.picture');
+
 
 const additionSuccessForm = () => {
   successElement = successTemplate.cloneNode(true);
@@ -87,9 +92,20 @@ const getData = () => {
   fetch('https://32.javascript.htmlacademy.pro/kekstagram/data')
     .then((response) => response.json())
     .then((data) => {
-      addingPhoto(data);
+      const container = document.querySelector('.pictures');
+      const photos = container.querySelectorAll('.picture');
+      photos.forEach((photo) => photo.remove());
+      if (filterDefault.classList.contains('img-filters__button--active')) {
+        addingPhoto(data); // Показать все фотографии
+      } else if (filterRandom.classList.contains('img-filters__button--active')) {
+        addingPhoto(data.slice(0, 10)); // Показать 10 случайных фотографий
+      } else if (filterDiscussed.classList.contains('img-filters__button--active')) {
+        const sortedData = data.slice().sort((a, b) => b.comments.length - a.comments.length); // Отсортировать по обсуждаемости
+        addingPhoto(sortedData); // Показать наиболее обсуждаемые фотографии
+      }
       showPhoto(data);
       showFilter();
+      filterClick();
     });
 };
 
