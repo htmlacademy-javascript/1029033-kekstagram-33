@@ -62,7 +62,10 @@ const registercloseEventListeners = () => {
   });
 
   document.addEventListener('keydown', (evt) => {
-    if (evt.keyCode === 27) {
+
+    if (evt.key === 'Escape' && (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
+      evt.stopPropagation();
+    } else if (evt.key === 'Escape') {
       clickCloseForm();
     }
   });
@@ -70,24 +73,24 @@ const registercloseEventListeners = () => {
 
 const validateHashtags = (value) => {
   if (!value.trim()) {
-    return true; // Пустое поле считается валидным
+    return true;
   }
 
   const hashtags = value
     .trim()
     .split(/\s+/)
-    .map((tag) => tag.toLowerCase()) // Приводим все хэштеги к нижнему регистру
-    .filter(Boolean); // Убираем пустые строки
+    .map((tag) => tag.toLowerCase())
+    .filter(Boolean);
 
   if (hashtags.length > 5) {
-    return false; // Проверка на максимальное количество хэштегов
+    return false;
   }
 
   if (new Set(hashtags).size !== hashtags.length) {
-    return false; // Проверка на уникальность хэштегов
+    return false;
   }
 
-  return hashtags.every((tag) => hashtagPattern.test(tag)); // Проверка каждого хэштега по регулярному выражению
+  return hashtags.every((tag) => hashtagPattern.test(tag));
 };
 
 const validateComment = (value) => {

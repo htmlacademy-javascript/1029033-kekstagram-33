@@ -60,7 +60,7 @@ const applyFilter = (value) => {
 
 slider.noUiSlider.on('update', () => {
   const changeValue = slider.noUiSlider.get();
-  valueEffects.textContent = changeValue; //не работает через .value, значение не отображается!
+  valueEffects.textContent = changeValue;
 
 
   applyFilter(changeValue);
@@ -72,7 +72,6 @@ const overlayEffect = () => {
     effectsItem.addEventListener('click', () => {
       currentEffectIndex = index;
 
-      // Установить настройки слайдера в зависимости от фильтра
       if (index === HEAT) {
         slider.noUiSlider.updateOptions({
           range: { min: 1, max: 3 },
