@@ -2,19 +2,17 @@ import {addingPhoto} from './photo-generation.js';
 import {showPhoto} from './big-picture.js';
 import {showFilter, filterClick} from './filter.js';
 
-let successElement;
-let errorElement;
-let errorLoadingElement;
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorLoading = document.querySelector('#data-error').content.querySelector('.data-error');
+let successElement;
+let errorElement;
+let errorLoadingElement;
 const filterDefault = document.getElementById('filter-default');
 const filterRandom = document.getElementById('filter-random');
 const filterDiscussed = document.getElementById('filter-discussed');
-const closeErrorForm = errorElement.querySelector('.error__button');
-const closeSuccessForm = successElement.querySelector('.success__button');
 const container = document.querySelector('.pictures');
 const photos = container.querySelectorAll('.picture');
 
@@ -43,6 +41,7 @@ const closeOnEsc = (evt) => {
 };
 
 const closeEventListeners = () => {
+  const closeSuccessForm = successElement.querySelector('.success__button');
   if (closeSuccessForm) {
     closeSuccessForm.addEventListener('click', () => {
       clickCloseForm();
@@ -54,6 +53,11 @@ const closeEventListeners = () => {
 };
 
 //ERROR
+
+const additionErorForm = () => {
+  errorElement = errorTemplate.cloneNode(true);
+  body.appendChild(errorElement);
+};
 
 const errorLoadingForm = () => {
   errorLoadingElement = errorLoading.cloneNode(true);
@@ -80,6 +84,7 @@ const closeOnEscError = (evt) => {
 };
 
 const closeEventListenersError = () => {
+  const closeErrorForm = errorElement.querySelector('.error__button');
   if (closeErrorForm) {
     closeErrorForm.addEventListener('click', () => {
       clickCloseErrorForm();
@@ -89,11 +94,6 @@ const closeEventListenersError = () => {
   body.addEventListener('click', closeOnClickError);
 };
 
-const additionErorForm = () => {
-  errorElement = errorTemplate.cloneNode(true);
-  body.appendChild(errorElement);
-  closeEventListenersError();
-};
 
 const getData = () => {
   fetch('https://32.javascript.htmlacademy.pro/kekstagram/data')
@@ -113,8 +113,8 @@ const getData = () => {
       filterClick();
     })
     .catch((error) => {
-      console.log(error);
       errorLoadingForm();
+      return error;
     });
 };
 
@@ -140,9 +140,9 @@ const sendingData = (onSuccess) => {
         closeEventListeners();
       })
       .catch((error) => {
-        console.log(error);
         additionErorForm();
         closeEventListenersError();
+        return error;
       });
   });
 };

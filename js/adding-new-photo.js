@@ -140,9 +140,9 @@ formDOMElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
-    console.log('Форма валидна, можно отправлять');
+    return 'Форма валидна, можно отправлять';
   } else {
-    console.log('Форма не валидна');
+    return 'Форма не валидна';
   }
 });
 
