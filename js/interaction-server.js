@@ -14,7 +14,6 @@ const filterDefault = document.getElementById('filter-default');
 const filterRandom = document.getElementById('filter-random');
 const filterDiscussed = document.getElementById('filter-discussed');
 
-
 const additionSuccessForm = () => {
   successElement = successTemplate.cloneNode(true);
   body.appendChild(successElement);
@@ -53,11 +52,6 @@ const closeEventListeners = () => {
 
 //ERROR
 
-const additionErorForm = () => {
-  errorElement = errorTemplate.cloneNode(true);
-  body.appendChild(errorElement);
-};
-
 const errorLoadingForm = () => {
   errorLoadingElement = errorLoading.cloneNode(true);
   body.appendChild(errorLoadingElement);
@@ -77,7 +71,7 @@ const closeOnClickError = (evt) => {
 };
 
 const closeOnEscError = (evt) => {
-  if (evt.keyCode === 27) {
+  if (evt.key === 'Escape') { // Лучше использовать evt.key для совместимости
     clickCloseErrorForm();
   }
 };
@@ -93,6 +87,11 @@ const closeEventListenersError = () => {
   body.addEventListener('click', closeOnClickError);
 };
 
+const additionErorForm = () => {
+  errorElement = errorTemplate.cloneNode(true);
+  body.appendChild(errorElement);
+  closeEventListenersError();
+};
 
 const getData = () => {
   fetch('https://32.javascript.htmlacademy.pro/kekstagram/data')
