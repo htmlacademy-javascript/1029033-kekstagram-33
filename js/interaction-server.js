@@ -2,17 +2,21 @@ import {addingPhoto} from './photo-generation.js';
 import {showPhoto} from './big-picture.js';
 import {showFilter, filterClick} from './filter.js';
 
+let successElement;
+let errorElement;
+let errorLoadingElement;
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorLoading = document.querySelector('#data-error').content.querySelector('.data-error');
-let successElement;
-let errorElement;
-let errorLoadingElement;
 const filterDefault = document.getElementById('filter-default');
 const filterRandom = document.getElementById('filter-random');
 const filterDiscussed = document.getElementById('filter-discussed');
+const closeErrorForm = errorElement.querySelector('.error__button');
+const closeSuccessForm = successElement.querySelector('.success__button');
+const container = document.querySelector('.pictures');
+const photos = container.querySelectorAll('.picture');
 
 const additionSuccessForm = () => {
   successElement = successTemplate.cloneNode(true);
@@ -39,7 +43,6 @@ const closeOnEsc = (evt) => {
 };
 
 const closeEventListeners = () => {
-  const closeSuccessForm = successElement.querySelector('.success__button');
   if (closeSuccessForm) {
     closeSuccessForm.addEventListener('click', () => {
       clickCloseForm();
@@ -71,13 +74,12 @@ const closeOnClickError = (evt) => {
 };
 
 const closeOnEscError = (evt) => {
-  if (evt.key === 'Escape') { // Лучше использовать evt.key для совместимости
+  if (evt.key === 'Escape') {
     clickCloseErrorForm();
   }
 };
 
 const closeEventListenersError = () => {
-  const closeErrorForm = errorElement.querySelector('.error__button');
   if (closeErrorForm) {
     closeErrorForm.addEventListener('click', () => {
       clickCloseErrorForm();
@@ -97,8 +99,6 @@ const getData = () => {
   fetch('https://32.javascript.htmlacademy.pro/kekstagram/data')
     .then((response) => response.json())
     .then((data) => {
-      const container = document.querySelector('.pictures');
-      const photos = container.querySelectorAll('.picture');
       photos.forEach((photo) => photo.remove());
       if (filterDefault.classList.contains('img-filters__button--active')) {
         addingPhoto(data); // Показать все фотографии

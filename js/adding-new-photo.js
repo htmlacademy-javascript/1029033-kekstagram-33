@@ -12,7 +12,7 @@ const buttonSubmitDOMElement = document.querySelector('.img-upload__submit');
 const COMMENTS_ERROR_MESSAGE = 'Комментарий не может превышать 140 символов.';
 const HASHTAGS_ERROR_MESSAGE = 'Хэш-теги должны начинаться с "#" и не содержать специальных символов, кроме букв и цифр. Максимальная длина хэштега — 20 символов.';
 const COMMENTS_ERROR_LENGTH = 140;
-
+const hashtagPattern = /^#[a-zA-Zа-яА-Я0-9]{1,19}$/;
 
 const showImagePreview = function () {
   const file = uploadInputDOMElement.files[0];
@@ -80,8 +80,6 @@ const validateHashtags = (value) => {
   if (new Set(hashtags).size !== hashtags.length) {
     return false;
   }
-
-  const hashtagPattern = /^#[a-zA-Zа-яА-Я0-9]{1,19}$/;
 
   return hashtags.every((tag) => hashtagPattern.test(tag));
 };
