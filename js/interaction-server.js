@@ -13,8 +13,7 @@ let errorLoadingElement;
 const filterDefault = document.getElementById('filter-default');
 const filterRandom = document.getElementById('filter-random');
 const filterDiscussed = document.getElementById('filter-discussed');
-const container = document.querySelector('.pictures');
-const photos = container.querySelectorAll('.picture');
+
 
 const additionSuccessForm = () => {
   successElement = successTemplate.cloneNode(true);
@@ -78,7 +77,7 @@ const closeOnClickError = (evt) => {
 };
 
 const closeOnEscError = (evt) => {
-  if (evt.key === 'Escape') {
+  if (evt.keyCode === 27) {
     clickCloseErrorForm();
   }
 };
@@ -99,6 +98,8 @@ const getData = () => {
   fetch('https://32.javascript.htmlacademy.pro/kekstagram/data')
     .then((response) => response.json())
     .then((data) => {
+      const container = document.querySelector('.pictures');
+      const photos = container.querySelectorAll('.picture');
       photos.forEach((photo) => photo.remove());
       if (filterDefault.classList.contains('img-filters__button--active')) {
         addingPhoto(data); // Показать все фотографии

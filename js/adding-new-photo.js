@@ -69,23 +69,34 @@ const registercloseEventListeners = () => {
 };
 
 const validateHashtags = (value) => {
-  if (!value) {
+  if (!value.trim()) {
+    return true; // Пустое поле считается валидным
+  }
+
+  const hashtags = value
+    .trim()
+    .split(/\s+/)
+    .map((tag) => tag.toLowerCase()) // Приводим все хэштеги к нижнему регистру
+    .filter(Boolean); // Убираем пустые строки
+
+  if (hashtags.length > 5) {
+    return false; // Проверка на максимальное количество хэштегов
+  }
+
+  if (new Set(hashtags).size !== hashtags.length) {
+    return false; // Проверка на уникальность хэштегов
+  }
+
+  return hashtags.every((tag) => hashtagPattern.test(tag)); // Проверка каждого хэштега по регулярному выражению
+};
+
+const validateComment = (value) => {
+  if (!value.trim()) {
     return true;
   }
 
-  const hashtags = value.split(' ').map((tag) => tag.toLowerCase());
-  if (hashtags.length > 5) {
-    return false;
-  }
-  if (new Set(hashtags).size !== hashtags.length) {
-    return false;
-  }
-
-  return hashtags.every((tag) => hashtagPattern.test(tag));
+  return value.length <= COMMENTS_ERROR_LENGTH;
 };
-
-const validateComment = (value) =>
-  value.length <= COMMENTS_ERROR_LENGTH;
 
 const pristine = new Pristine(formDOMElement, {
   classTo: 'img-upload__field-wrapper',
