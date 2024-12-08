@@ -54,6 +54,7 @@ const clickCloseForm = () => {
   openForm.classList.add('hidden');
   body.classList.remove('modal-open');
   document.querySelector('.img-upload__form').reset();
+
 };
 
 const registerCloseEventListeners = () => {
@@ -63,12 +64,13 @@ const registerCloseEventListeners = () => {
 
   document.addEventListener('keydown', (evt) => {
 
-    if (evt.key === 'Escape' && (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
+    if (evt.key === 'Escape' && document.querySelector('.error') || (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
       evt.stopPropagation();
     } else if (evt.key === 'Escape') {
       clickCloseForm();
     }
   });
+
 };
 
 const validateHashtags = (value) => {
@@ -129,12 +131,6 @@ formDOMElement.addEventListener('submit', (evt) => {
 
   } else {
     return 'Форма не валидна';
-  }
-});
-
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape' && (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
-    evt.stopPropagation();
   }
 });
 

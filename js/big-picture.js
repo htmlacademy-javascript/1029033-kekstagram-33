@@ -113,18 +113,24 @@ const addEventListeners = function () {
 };
 
 const addCloseEventListeners = function () {
-  closeBigPicture.addEventListener('click', () => {
+  const closeHandler = () => {
     closeBigPictureModal();
-  });
+    document.removeEventListener('keydown', closeHandler);
+    closeBigPicture.removeEventListener('click', closeHandler);
+  };
 
-  document.addEventListener('keydown', (evt) => {
+  const keydownHandler = (evt) => {
     if (evt.keyCode === 27) {
       closeBigPictureModal();
       removeLoadMoreCommentsHandler();
+      document.removeEventListener('keydown', keydownHandler);
+      closeBigPicture.removeEventListener('click', closeHandler);
     }
-  });
-};
+  };
 
+  closeBigPicture.addEventListener('click', closeHandler);
+  document.addEventListener('keydown', keydownHandler);
+};
 const showPhoto = function (data) {
   photoData = data;
   pictureItems = document.querySelectorAll('.picture');
