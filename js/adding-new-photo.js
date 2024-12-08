@@ -56,7 +56,7 @@ const clickCloseForm = () => {
   document.querySelector('.img-upload__form').reset();
 };
 
-const registercloseEventListeners = () => {
+const registerCloseEventListeners = () => {
   closeFormDOMElement.addEventListener('click', () => {
     clickCloseForm();
   });
@@ -160,4 +160,4 @@ formDOMElement.addEventListener('submit', (evt) => {
   }
 });
 
-export { registerHendlerModalForm, clickCloseForm, registercloseEventListeners };
+export { registerHendlerModalForm, clickCloseForm, registerCloseEventListeners };

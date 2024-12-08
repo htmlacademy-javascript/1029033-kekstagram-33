@@ -7,6 +7,7 @@ const form = document.querySelector('.img-upload__form');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorLoading = document.querySelector('#data-error').content.querySelector('.data-error');
+
 let successElement;
 let errorElement;
 let errorLoadingElement;
@@ -35,7 +36,6 @@ const closeOnClickSuccess = (evt) => {
 const closeOnEscSuccess = (evt) => {
   if ((evt.key === 'Escape' || evt.keyCode === 27) && successElement) {
     evt.stopPropagation();
-    clickCloseForm();
   }
 };
 
@@ -47,7 +47,6 @@ const closeEventListenersSuccess = () => {
   document.addEventListener('keydown', closeOnEscSuccess);
   body.addEventListener('click', closeOnClickSuccess);
 };
-
 
 const additionErrorForm = (formData) => {
   errorElement = errorTemplate.cloneNode(true);

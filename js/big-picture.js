@@ -4,7 +4,7 @@ const bigPicture = document.querySelector('.big-picture');
 const closeBigPicture = document.querySelector('.big-picture__cancel');
 const body = document.querySelector('body');
 const commentsList = bigPicture.querySelector('.social__comments');
-const dataGenerationComments = document.querySelector('.social__comment-total-count');
+const dataGenerationCommentsDOMElement = document.querySelector('.social__comment-total-count');
 const loadMoreButton = document.querySelector('.comments-loader');
 const commentShown = document.querySelector('.social__comment-shown-count');
 const COMMENTS_COUNT = 5;
@@ -21,7 +21,7 @@ const renderBigPicture = function (photo) {
   dataGenerationDescription.textContent = photo.description;
   dataGenerationLikes.textContent = photo.likes;
   commentsList.innerHTML = '';
-  dataGenerationComments.textContent = photo.comments.length;
+  dataGenerationCommentsDOMElement.textContent = photo.comments.length;
 
   photo.comments.forEach((comment) => {
     const commentElement = document.createElement('li');
