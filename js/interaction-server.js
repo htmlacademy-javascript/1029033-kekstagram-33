@@ -14,6 +14,10 @@ let errorLoadingElement;
 const filterDefault = document.getElementById('filter-default');
 const filterRandom = document.getElementById('filter-random');
 const filterDiscussed = document.getElementById('filter-discussed');
+const closeFormDOMElement = document.querySelector('.error__inner');
+const textHastagsDOMElement = form.querySelector('.text__hashtags');
+const textDescriptionDOMElement = form.querySelector('.text__description');
+
 
 const additionSuccessForm = () => {
   successElement = successTemplate.cloneNode(true);
@@ -27,6 +31,26 @@ const clickCloseForm = () => {
   }
 };
 
+const registerCloseEventListeners = () => {
+  if (closeFormDOMElement) {
+    closeFormDOMElement.addEventListener('click', () => {
+      clickCloseForm();
+    });
+  }
+  document.addEventListener('keydown', (evt) => {
+    if (
+      (evt.key === 'Escape' &&
+        (document.activeElement === textHastagsDOMElement ||
+          document.activeElement === textDescriptionDOMElement)) ||
+      document.querySelector('.error')
+    ) {
+      evt.stopPropagation();
+    } else if (evt.key === 'Escape') {
+      clickCloseForm();
+    }
+  });
+};
+
 const closeOnClickSuccess = (evt) => {
   if (successElement && !successElement.contains(evt.target)) {
     clickCloseForm();
@@ -36,21 +60,25 @@ const closeOnClickSuccess = (evt) => {
 const closeOnEscSuccess = (evt) => {
   if ((evt.key === 'Escape' || evt.keyCode === 27) && successElement) {
     evt.stopPropagation();
+    clickCloseForm();
+    registerCloseEventListeners();
   }
 };
 
 const closeEventListenersSuccess = () => {
-  const closeSuccessForm = successElement.querySelector('.success__button');
-  if (closeSuccessForm) {
-    closeSuccessForm.addEventListener('click', clickCloseForm);
+  const closeSuccessFormBtn = successElement.querySelector('.success__button');
+  if (closeSuccessFormBtn) {
+    closeSuccessFormBtn.addEventListener('click', clickCloseForm);
   }
   document.addEventListener('keydown', closeOnEscSuccess);
   body.addEventListener('click', closeOnClickSuccess);
 };
 
+
 const additionErrorForm = (formData) => {
   errorElement = errorTemplate.cloneNode(true);
   body.appendChild(errorElement);
+
 
   const closeErrorForm = () => {
     if (errorElement) {
@@ -59,15 +87,9 @@ const additionErrorForm = (formData) => {
     }
   };
 
+
   const closeOnClickError = (evt) => {
     if (errorElement && !errorElement.contains(evt.target)) {
-      closeErrorForm();
-    }
-  };
-
-  const closeOnEscError = (evt) => {
-    if ((evt.key === 'Escape' || evt.keyCode === 27) && errorElement) {
-      evt.stopPropagation();
       closeErrorForm();
     }
   };
@@ -77,16 +99,18 @@ const additionErrorForm = (formData) => {
     closeButton.addEventListener('click', closeErrorForm);
   }
 
-  document.addEventListener('keydown', closeOnEscError);
   body.addEventListener('click', closeOnClickError);
+
 
   form.querySelector('.text__hashtags').value = formData.hashtags;
   form.querySelector('.text__description').value = formData.description;
 };
 
+
 const errorLoadingForm = () => {
   errorLoadingElement = errorLoading.cloneNode(true);
   body.appendChild(errorLoadingElement);
+
 
   setTimeout(() => {
     if (errorLoadingElement) {
@@ -96,10 +120,14 @@ const errorLoadingForm = () => {
   }, 5000);
 };
 
-// Data Fetch
 const getData = () => {
   fetch('https://32.javascript.htmlacademy.pro/kekstagram/data')
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Ошибка сети');
+      }
+      return response.json();
+    })
     .then((data) => {
       const container = document.querySelector('.pictures');
       const photos = container.querySelectorAll('.picture');
@@ -123,18 +151,19 @@ const getData = () => {
     });
 };
 
+
 const sendingData = (onSuccess) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
 
-    fetch('https://32.javascript.htmlacademy.pro/kekstagram', {
+    fetch('ывывhttps://32.javascript.htmlacademy.pro/kekstagram', {
       method: 'POST',
       body: formData,
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Server error');
+          throw new Error('Ошибка сервера');
         }
         return response.json();
       })
@@ -152,20 +181,22 @@ const sendingData = (onSuccess) => {
   });
 };
 
-
-const formEscHandler = (evt) => {
-  if (evt.key === 'Escape' || evt.keyCode === 27) {
-    if (errorElement) {
-      evt.stopPropagation();
-      return;
-    }
-
-    if (!successElement) {
-      evt.preventDefault();
-    }
+const closeOnEscError = (evt) => {
+  if ((evt.key === 'Escape' || evt.keyCode === 27) && errorElement) {
+    evt.stopPropagation();
+    errorElement.remove();
+    errorElement = null;
+    document.removeEventListener('keydown', closeOnEscError);
   }
 };
 
-document.addEventListener('keydown', formEscHandler);
+const closeEventListenersError = () => {
+  document.addEventListener('keydown', closeOnEscError);
+  body.addEventListener('click', closeOnEscError);
+};
+
+if (errorElement) {
+  closeEventListenersError();
+}
 
 export { getData, sendingData };
