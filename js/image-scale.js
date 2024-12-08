@@ -1,5 +1,4 @@
 const uploadContainer = document.querySelector('.img-upload__preview-container');
-//const sliderDOMElement = uploadContainer.querySelector('.scale');
 const sliderElementBiggerDOMElement = uploadContainer.querySelector('.scale__control--bigger');
 const sliderElementSmallerDOMElement = uploadContainer.querySelector('.scale__control--smaller');
 const sliderValueDOMElement = uploadContainer.querySelector('.scale__control--value');

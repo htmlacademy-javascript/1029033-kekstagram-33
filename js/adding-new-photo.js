@@ -12,7 +12,7 @@ const buttonSubmitDOMElement = document.querySelector('.img-upload__submit');
 const COMMENTS_ERROR_MESSAGE = 'Комментарий не может превышать 140 символов.';
 const HASHTAGS_ERROR_MESSAGE = 'Хэш-теги должны начинаться с "#" и не содержать специальных символов, кроме букв и цифр. Максимальная длина хэштега — 20 символов.';
 const COMMENTS_ERROR_LENGTH = 140;
-
+const hashtagPattern = /^#[a-zA-Zа-яА-Я0-9]{1,19}$/;
 
 const showImagePreview = function () {
   const file = uploadInputDOMElement.files[0];
@@ -54,40 +54,54 @@ const clickCloseForm = () => {
   openForm.classList.add('hidden');
   body.classList.remove('modal-open');
   document.querySelector('.img-upload__form').reset();
+
 };
 
-const registercloseEventListeners = () => {
+const registerCloseEventListeners = () => {
   closeFormDOMElement.addEventListener('click', () => {
     clickCloseForm();
   });
 
   document.addEventListener('keydown', (evt) => {
-    if (evt.keyCode === 27) {
+
+    if (evt.key === 'Escape' && document.querySelector('.error') || (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
+      evt.stopPropagation();
+    } else if (evt.key === 'Escape') {
       clickCloseForm();
     }
   });
+
 };
 
 const validateHashtags = (value) => {
-  if (!value) {
+  if (!value.trim()) {
     return true;
   }
 
-  const hashtags = value.split(' ').map((tag) => tag.toLowerCase());
+  const hashtags = value
+    .trim()
+    .split(/\s+/)
+    .map((tag) => tag.toLowerCase())
+    .filter(Boolean);
+
   if (hashtags.length > 5) {
     return false;
   }
+
   if (new Set(hashtags).size !== hashtags.length) {
     return false;
   }
 
-  const hashtagPattern = /^#[a-zA-Zа-яА-Я0-9]{1,19}$/;
-
   return hashtags.every((tag) => hashtagPattern.test(tag));
 };
 
-const validateComment = (value) =>
-  value.length <= COMMENTS_ERROR_LENGTH;
+const validateComment = (value) => {
+  if (!value.trim()) {
+    return true;
+  }
+
+  return value.length <= COMMENTS_ERROR_LENGTH;
+};
 
 const pristine = new Pristine(formDOMElement, {
   classTo: 'img-upload__field-wrapper',
@@ -120,12 +134,6 @@ formDOMElement.addEventListener('submit', (evt) => {
   }
 });
 
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape' && (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
-    evt.stopPropagation();
-  }
-});
-
 const toggleSubmitButton = () => {
   if (pristine.validate()) {
     buttonSubmitDOMElement.disabled = false;
@@ -142,10 +150,10 @@ formDOMElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
-    console.log('Форма валидна, можно отправлять');
+    return 'Форма валидна, можно отправлять';
   } else {
-    console.log('Форма не валидна');
+    return 'Форма не валидна';
   }
 });
 
-export { registerHendlerModalForm, clickCloseForm, registercloseEventListeners };
+export { registerHendlerModalForm, clickCloseForm, registerCloseEventListeners };

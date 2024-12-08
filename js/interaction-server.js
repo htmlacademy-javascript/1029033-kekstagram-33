@@ -1,151 +1,174 @@
-import {addingPhoto} from './photo-generation.js';
-import {showPhoto} from './big-picture.js';
-import {showFilter, filterClick} from './filter.js';
+import { addingPhoto } from './photo-generation.js';
+import { showPhoto } from './big-picture.js';
+import { showFilter, filterClick } from './filter.js';
 
 const body = document.querySelector('body');
-const form = document.querySelector('.img-upload__form');
+const uploadForm = document.querySelector('.img-upload__form');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
-const errorLoading = document.querySelector('#data-error').content.querySelector('.data-error');
-let successElement;
-let errorElement;
+const errorLoadingTemplate = document.querySelector('#data-error').content.querySelector('.data-error');
+let successModalElement;
+let errorModalElement;
 let errorLoadingElement;
-const filterDefault = document.getElementById('filter-default');
-const filterRandom = document.getElementById('filter-random');
-const filterDiscussed = document.getElementById('filter-discussed');
+const filterDefaultDOMElement = document.getElementById('filter-default');
+const filterRandomDOMElement = document.getElementById('filter-random');
+const filterDiscussedDOMElement = document.getElementById('filter-discussed');
 
 
 const additionSuccessForm = () => {
-  successElement = successTemplate.cloneNode(true);
-  body.appendChild(successElement);
+  successModalElement = successTemplate.cloneNode(true);
+  body.appendChild(successModalElement);
 };
 
-const clickCloseForm = () => {
-  if (successElement) {
-    successElement.remove();
-    successElement = null;
+const closeOnClickForm = () => {
+  if (successModalElement) {
+    successModalElement.remove();
+    successModalElement = null;
   }
 };
 
-const closeOnClick = (evt) => {
-  if (successElement && !successElement.contains(evt.target)) {
-    clickCloseForm();
+const closeOnClickSuccess = (evt) => {
+  if (successModalElement && !successModalElement.contains(evt.target)) {
+    closeOnClickForm();
   }
 };
 
-const closeOnEsc = (evt) => {
-  if (evt.keyCode === 27) {
-    clickCloseForm();
+const closeOnEscSuccess = (evt) => {
+  if ((evt.key === 'Escape' || evt.keyCode === 27) && successModalElement) {
+    evt.stopPropagation();
+    closeOnClickForm();
   }
 };
 
-const closeEventListeners = () => {
-  const closeSuccessForm = successElement.querySelector('.success__button');
-  if (closeSuccessForm) {
-    closeSuccessForm.addEventListener('click', () => {
-      clickCloseForm();
-    });
+const closeEventListenersSuccess = () => {
+  const closeSuccessFormBtn = successModalElement.querySelector('.success__button');
+  if (closeSuccessFormBtn) {
+    closeSuccessFormBtn.addEventListener('click', closeOnClickForm);
   }
-
-  document.addEventListener('keydown', closeOnEsc);
-  body.addEventListener('click', closeOnClick);
+  document.addEventListener('keydown', closeOnEscSuccess);
+  body.addEventListener('click', closeOnClickSuccess);
 };
 
-//ERROR
 
-const additionErorForm = () => {
-  errorElement = errorTemplate.cloneNode(true);
-  body.appendChild(errorElement);
+const additionErrorForm = (formData) => {
+  errorModalElement = errorTemplate.cloneNode(true);
+  body.appendChild(errorModalElement);
+
+
+  const closeErrorForm = () => {
+    if (errorModalElement) {
+      errorModalElement.remove();
+      errorModalElement = null;
+    }
+  };
+
+  const closeButton = errorModalElement.querySelector('.error__button');
+  if (closeButton) {
+    closeButton.addEventListener('click', closeErrorForm);
+  }
+  const errorDOMElement = document.querySelector('.error');
+  errorDOMElement.addEventListener('click', (evt) => {
+    if (!evt.target.classList.contains('error__inner')) {
+      closeErrorForm();
+    }
+  });
+
+
+  uploadForm.querySelector('.text__hashtags').value = formData.hashtags;
+  uploadForm.querySelector('.text__description').value = formData.description;
 };
 
-const errorLoadingForm = () => {
-  errorLoadingElement = errorLoading.cloneNode(true);
+
+const openErrorLoadingForm = () => {
+  errorLoadingElement = errorLoadingTemplate.cloneNode(true);
   body.appendChild(errorLoadingElement);
-};
 
-const clickCloseErrorForm = () => {
-  if (errorElement) {
-    errorElement.remove();
-    errorElement = null;
-  }
-};
 
-const closeOnClickError = (evt) => {
-  if (errorElement && !errorElement.contains(evt.target)) {
-    clickCloseErrorForm();
-  }
+  setTimeout(() => {
+    if (errorLoadingElement) {
+      errorLoadingElement.remove();
+      errorLoadingElement = null;
+    }
+  }, 5000);
 };
-
-const closeOnEscError = (evt) => {
-  if (evt.keyCode === 27) {
-    clickCloseErrorForm();
-  }
-};
-
-const closeEventListenersError = () => {
-  const closeErrorForm = errorElement.querySelector('.error__button');
-  if (closeErrorForm) {
-    closeErrorForm.addEventListener('click', () => {
-      clickCloseErrorForm();
-    });
-  }
-  document.addEventListener('keydown', closeOnEscError);
-  body.addEventListener('click', closeOnClickError);
-};
-
 
 const getData = () => {
   fetch('https://32.javascript.htmlacademy.pro/kekstagram/data')
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Ошибка сети');
+      }
+      return response.json();
+    })
     .then((data) => {
       const container = document.querySelector('.pictures');
       const photos = container.querySelectorAll('.picture');
       photos.forEach((photo) => photo.remove());
-      if (filterDefault.classList.contains('img-filters__button--active')) {
-        addingPhoto(data); // Показать все фотографии
-      } else if (filterRandom.classList.contains('img-filters__button--active')) {
-        addingPhoto(data.slice(0, 10)); // Показать 10 случайных фотографий
-      } else if (filterDiscussed.classList.contains('img-filters__button--active')) {
-        const sortedData = data.slice().sort((a, b) => b.comments.length - a.comments.length); // Отсортировать по обсуждаемости
-        addingPhoto(sortedData); // Показать наиболее обсуждаемые фотографии
+
+      if (filterDefaultDOMElement.classList.contains('img-filters__button--active')) {
+        addingPhoto(data);
+      } else if (filterRandomDOMElement.classList.contains('img-filters__button--active')) {
+        addingPhoto(data.slice(0, 10));
+      } else if (filterDiscussedDOMElement.classList.contains('img-filters__button--active')) {
+        const sortedData = data.slice().sort((a, b) => b.comments.length - a.comments.length);
+        addingPhoto(sortedData);
       }
+
       showPhoto(data);
       showFilter();
       filterClick();
     })
-    .catch((error) => {
-      console.log(error);
-      errorLoadingForm();
+    .catch(() => {
+      openErrorLoadingForm();
     });
 };
 
-const sendingData = (onSuccess) => {
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
 
+const closeOnEscError = (evt) => {
+  if ((evt.key === 'Escape' || evt.keyCode === 27) && errorModalElement) {
+    evt.stopPropagation();
+    errorModalElement.remove();
+    errorModalElement = null;
+    document.removeEventListener('keydown', closeOnEscError);
+  }
+};
+
+const closeEventListenersError = () => {
+  document.addEventListener('keydown', closeOnEscError);
+  body.addEventListener('click', errorModalElement);
+};
+
+const sendingData = (onSuccess) => {
+  uploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
     const formData = new FormData(evt.target);
 
-    fetch('https://32.javascript.htmlacademy.pro/kekstagram', {
+    fetch('ывывhttps://32.javascript.htmlacademy.pro/kekstagram', {
       method: 'POST',
       body: formData,
     })
       .then((response) => {
         if (!response.ok) {
-          return Promise.reject('Ошибка на сервере');
+          throw new Error('Ошибка сервера');
         }
         return response.json();
       })
       .then(() => {
         onSuccess();
         additionSuccessForm();
-        closeEventListeners();
+        closeEventListenersSuccess();
       })
-      .catch((error) => {
-        console.log(error);
-        additionErorForm();
-        closeEventListenersError();
+      .catch(() => {
+        additionErrorForm({
+          hashtags: uploadForm.querySelector('.text__hashtags').value,
+          description: uploadForm.querySelector('.text__description').value,
+
+        });
+        if (errorModalElement) {
+          closeEventListenersError();
+        }
       });
   });
 };
 
-export { getData, sendingData, closeEventListeners };
+export { getData, sendingData };
