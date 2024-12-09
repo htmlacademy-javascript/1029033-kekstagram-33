@@ -4,15 +4,13 @@ const filterDefault = document.getElementById('filter-default');
 const filterRandom = document.getElementById('filter-random');
 const filterDiscussed = document.getElementById('filter-discussed');
 const RERENDER_DELAY = 500;
+let timeoutId;
 
-const debounce = (callback, timeoutDelay) => {
-  let timeoutId;
-  return (...rest) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
-  };
+
+const debounce = (callback, timeoutDelay) => (...rest) => {
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
 };
-
 
 const showFilter = () => {
   filterSection.classList.remove('img-filters--inactive');

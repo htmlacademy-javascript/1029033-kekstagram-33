@@ -1,29 +1,27 @@
 
+
 const bigPicture = document.querySelector('.big-picture');
 const closeBigPicture = document.querySelector('.big-picture__cancel');
 const body = document.querySelector('body');
 const commentsList = bigPicture.querySelector('.social__comments');
-const dataGenerationComments = document.querySelector('.social__comment-total-count');
+const dataGenerationCommentsDOMElement = document.querySelector('.social__comment-total-count');
 const loadMoreButton = document.querySelector('.comments-loader');
 const commentShown = document.querySelector('.social__comment-shown-count');
 const COMMENTS_COUNT = 5;
 let pictureItems;
 let photoData;
-
 let loadMoreButtonClickListener;
+const bigImage = bigPicture.querySelector('img');
+const dataGenerationDescription = bigPicture.querySelector('.social__header .social__caption');
+const dataGenerationLikes = bigPicture.querySelector('.social__header .likes-count');
+
 
 const renderBigPicture = function (photo) {
-  const bigImage = bigPicture.querySelector('img');
   bigImage.src = photo.url;
-
-  const dataGenerationDescription = bigPicture.querySelector('.social__header .social__caption');
   dataGenerationDescription.textContent = photo.description;
-
-  const dataGenerationLikes = bigPicture.querySelector('.social__header .likes-count');
   dataGenerationLikes.textContent = photo.likes;
-
   commentsList.innerHTML = '';
-  dataGenerationComments.textContent = photo.comments.length;
+  dataGenerationCommentsDOMElement.textContent = photo.comments.length;
 
   photo.comments.forEach((comment) => {
     const commentElement = document.createElement('li');
@@ -115,18 +113,24 @@ const addEventListeners = function () {
 };
 
 const addCloseEventListeners = function () {
-  closeBigPicture.addEventListener('click', () => {
+  const closeHandler = () => {
     closeBigPictureModal();
-  });
+    document.removeEventListener('keydown', closeHandler);
+    closeBigPicture.removeEventListener('click', closeHandler);
+  };
 
-  document.addEventListener('keydown', (evt) => {
+  const keydownHandler = (evt) => {
     if (evt.keyCode === 27) {
       closeBigPictureModal();
       removeLoadMoreCommentsHandler();
+      document.removeEventListener('keydown', keydownHandler);
+      closeBigPicture.removeEventListener('click', closeHandler);
     }
-  });
-};
+  };
 
+  closeBigPicture.addEventListener('click', closeHandler);
+  document.addEventListener('keydown', keydownHandler);
+};
 const showPhoto = function (data) {
   photoData = data;
   pictureItems = document.querySelectorAll('.picture');
