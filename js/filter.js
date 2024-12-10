@@ -1,11 +1,10 @@
 import {getData} from './interaction-server.js';
+const RERENDER_DELAY = 500;
 const filterSection = document.querySelector('.img-filters');
 const filterDefault = document.getElementById('filter-default');
 const filterRandom = document.getElementById('filter-random');
 const filterDiscussed = document.getElementById('filter-discussed');
-const RERENDER_DELAY = 500;
 let timeoutId;
-
 
 const debounce = (callback, timeoutDelay) => (...rest) => {
   clearTimeout(timeoutId);
@@ -17,7 +16,7 @@ const showFilter = () => {
 };
 
 
-const filterClick = () => {
+const changeFilterButton = () => {
 
   filterRandom.addEventListener('click',() => {
     filterRandom.classList.add('img-filters__button--active');
@@ -42,4 +41,4 @@ const filterClick = () => {
 };
 
 
-export{showFilter,filterClick};
+export{showFilter,changeFilterButton};

@@ -1,20 +1,24 @@
-const imgUpload = document.querySelector('.img-upload__overlay');
-const valueEffects = imgUpload.querySelector('.effect-level__value');
-const effectsItems = imgUpload.querySelectorAll('.effects__item');
-const slider = imgUpload.querySelector('.effect-level__slider');
-const preview = imgUpload.querySelector('.img-upload__preview img');
-const effectLevel = imgUpload.querySelector('.img-upload__effect-level');
-
+const CONVERSION_PERCENTAGE = 100;
 const ORIGINAL = 0;
 const CHROM = 1;
 const SEPIA = 2;
 const MARVIN = 3;
 const PHOBOS = 4;
 const HEAT = 5;
+const imgUpload = document.querySelector('.img-upload__overlay');
+const valueEffects = imgUpload.querySelector('.effect-level__value');
+const effectsItems = imgUpload.querySelectorAll('.effects__item');
+const slider = imgUpload.querySelector('.effect-level__slider');
+const preview = imgUpload.querySelector('.img-upload__preview img');
+const effectLevel = imgUpload.querySelector('.img-upload__effect-level');
+const uploadContainer = document.querySelector('.img-upload__preview-container');
+const sliderValueDOMElement = uploadContainer.querySelector('.scale__control--value');
+const imageDOMElement = uploadContainer.querySelector('.img-upload__preview img');
+
 
 let currentEffectIndex = ORIGINAL;
 
-const originalEffects = () => {
+const selectDefaultEffect = () => {
   preview.style.filter = '';
   effectLevel.classList.add('hidden');
 };
@@ -51,7 +55,7 @@ const applyFilter = (value) => {
       effectLevel.classList.remove('hidden');
       break;
     case ORIGINAL:
-      originalEffects();
+      selectDefaultEffect();
       break;
     default:
       preview.style.filter = '';
@@ -71,6 +75,9 @@ const overlayEffect = () => {
   effectsItems.forEach((effectsItem, index) => {
     effectsItem.addEventListener('click', () => {
       currentEffectIndex = index;
+
+      sliderValueDOMElement.value = `${CONVERSION_PERCENTAGE}%`;
+      imageDOMElement.style.transform = 'scale(1)';
 
       if (index === HEAT) {
         slider.noUiSlider.updateOptions({
@@ -97,7 +104,7 @@ const overlayEffect = () => {
           step: 0.1,
         });
       } else if (index === ORIGINAL) {
-        originalEffects();
+        selectDefaultEffect();
         slider.noUiSlider.updateOptions({
           range: { min: 0, max: 1 },
           start: 0,
@@ -105,7 +112,7 @@ const overlayEffect = () => {
         });
       }
 
-      slider.noUiSlider.set(index === ORIGINAL ? 0 : slider.noUiSlider.options.range.min);
+      slider.noUiSlider.set(index === ORIGINAL ? 0 : slider.noUiSlider.options.range.max);
 
       if (index === ORIGINAL) {
         preview.style.filter = '';

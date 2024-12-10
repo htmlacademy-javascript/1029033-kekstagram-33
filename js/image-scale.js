@@ -1,13 +1,13 @@
+const CONVERSION_PERCENTAGE = 100;
+const SLIDER_STEP = 25;
 const uploadContainer = document.querySelector('.img-upload__preview-container');
 const sliderElementBiggerDOMElement = uploadContainer.querySelector('.scale__control--bigger');
 const sliderElementSmallerDOMElement = uploadContainer.querySelector('.scale__control--smaller');
 const sliderValueDOMElement = uploadContainer.querySelector('.scale__control--value');
 const imageDOMElement = uploadContainer.querySelector('.img-upload__preview img');
-const CONVERSION_PERCENTAGE = 100;
-const SLIDER_STEP = 25;
 
 
-const imageScale = () => {
+const changeImageScale = () => {
   sliderElementSmallerDOMElement.addEventListener('click',() => {
     let numberSliderValueSmaller = parseFloat(sliderValueDOMElement.value);
     if (numberSliderValueSmaller > SLIDER_STEP) {
@@ -28,4 +28,4 @@ const imageScale = () => {
 
 };
 
-export { imageScale };
+export { changeImageScale };
