@@ -1,5 +1,5 @@
 
-const addingPhoto = function (data) {
+const addingPhoto = (data) => {
   const container = document.querySelector('.pictures');
   const fotoTemplate = document.querySelector ('#picture').content.querySelector('.picture');
 

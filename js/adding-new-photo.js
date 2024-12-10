@@ -1,3 +1,7 @@
+const COMMENTS_ERROR_MESSAGE = 'Комментарий не может превышать 140 символов.';
+const HASHTAGS_ERROR_MESSAGE = 'Хэш-теги должны начинаться с "#" и не содержать специальных символов, кроме букв и цифр. Хэш-теги не должны повторяться (регистр не важен). Нельзя указать больше пяти хэштегов. Максимальная длина хэштега — 20 символов.';
+const COMMENTS_ERROR_LENGTH = 140;
+const hashtagPattern = /^#[a-zA-Zа-яА-Я0-9]{1,19}$/;
 const body = document.querySelector('body');
 const uploadPreview = document.querySelector('.img-upload');
 const openForm = document.querySelector('.img-upload__overlay.hidden');
@@ -9,12 +13,9 @@ const textDescriptionDOMElement = uploadPreview.querySelector('.text__descriptio
 const previewImageDOMElement = uploadPreview.querySelector('.img-upload__preview img');
 const effectPreviewsDOMElement = uploadPreview.querySelectorAll('.effects__preview');
 const buttonSubmitDOMElement = document.querySelector('.img-upload__submit');
-const COMMENTS_ERROR_MESSAGE = 'Комментарий не может превышать 140 символов.';
-const HASHTAGS_ERROR_MESSAGE = 'Хэш-теги должны начинаться с "#" и не содержать специальных символов, кроме букв и цифр. Максимальная длина хэштега — 20 символов.';
-const COMMENTS_ERROR_LENGTH = 140;
-const hashtagPattern = /^#[a-zA-Zа-яА-Я0-9]{1,19}$/;
 
-const showImagePreview = function () {
+
+const showImagePreview = () => {
   const file = uploadInputDOMElement.files[0];
   if (file) {
     const reader = new FileReader();
@@ -70,7 +71,6 @@ const registerCloseEventListeners = () => {
       clickCloseForm();
     }
   });
-
 };
 
 const validateHashtags = (value) => {
@@ -135,11 +135,7 @@ formDOMElement.addEventListener('submit', (evt) => {
 });
 
 const toggleSubmitButton = () => {
-  if (pristine.validate()) {
-    buttonSubmitDOMElement.disabled = false;
-  } else {
-    buttonSubmitDOMElement.disabled = true;
-  }
+  buttonSubmitDOMElement.disabled = !pristine.validate();
 };
 
 formDOMElement.addEventListener('input', toggleSubmitButton);

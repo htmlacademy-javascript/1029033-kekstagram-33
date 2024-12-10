@@ -1,5 +1,4 @@
-
-
+const COMMENTS_COUNT = 5;
 const bigPicture = document.querySelector('.big-picture');
 const closeBigPicture = document.querySelector('.big-picture__cancel');
 const body = document.querySelector('body');
@@ -7,16 +6,17 @@ const commentsList = bigPicture.querySelector('.social__comments');
 const dataGenerationCommentsDOMElement = document.querySelector('.social__comment-total-count');
 const loadMoreButton = document.querySelector('.comments-loader');
 const commentShown = document.querySelector('.social__comment-shown-count');
-const COMMENTS_COUNT = 5;
-let pictureItems;
-let photoData;
-let loadMoreButtonClickListener;
 const bigImage = bigPicture.querySelector('img');
 const dataGenerationDescription = bigPicture.querySelector('.social__header .social__caption');
 const dataGenerationLikes = bigPicture.querySelector('.social__header .likes-count');
+let closeHandler;
+let keydownHandler;
+let pictureItems;
+let photoData;
+let loadMoreButtonClickListener;
 
 
-const renderBigPicture = function (photo) {
+const renderBigPicture = (photo) => {
   bigImage.src = photo.url;
   dataGenerationDescription.textContent = photo.description;
   dataGenerationLikes.textContent = photo.likes;
@@ -44,7 +44,7 @@ const renderBigPicture = function (photo) {
   });
 };
 
-const hideExcessComments = function () {
+const hideExcessComments = () => {
   const loadMoreComments = document.querySelectorAll('.social__comment');
 
   if (loadMoreComments.length > COMMENTS_COUNT) {
@@ -59,7 +59,7 @@ const hideExcessComments = function () {
   }
 };
 
-const loadMoreCommentsHandler = function () {
+const loadMoreCommentsHandler = () => {
   const loadMoreComments = document.querySelectorAll('.social__comment');
   let commentsDisplayed = COMMENTS_COUNT;
 
@@ -79,29 +79,30 @@ const loadMoreCommentsHandler = function () {
   loadMoreButton.addEventListener('click', loadMoreButtonClickListener);
 };
 
-const removeLoadMoreCommentsHandler = function () {
+const removeLoadMoreCommentsHandler = () => {
   loadMoreButton.removeEventListener('click', loadMoreButtonClickListener);
 };
 
-
-const handleLoadMoreComments = function () {
+const handleLoadMoreComments = () => {
   hideExcessComments();
   loadMoreCommentsHandler();
 };
 
-
-const openBigPictureModal = function () {
+const openBigPictureModal = () => {
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
+  addCloseEventListeners();
 };
 
-const closeBigPictureModal = function () {
+const closeBigPictureModal = () => {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
   removeLoadMoreCommentsHandler();
+  closeBigPicture.removeEventListener('click', closeHandler);
+  document.removeEventListener('keydown', keydownHandler);
 };
 
-const addEventListeners = function () {
+const addEventListeners = () => {
   pictureItems.forEach((pictureItem, index) => {
     pictureItem.addEventListener('click', () => {
       const photo = photoData[index];
@@ -112,30 +113,29 @@ const addEventListeners = function () {
   });
 };
 
-const addCloseEventListeners = function () {
-  const closeHandler = () => {
+const addCloseEventListeners = () => {
+  closeBigPicture.removeEventListener('click', closeHandler);
+  document.removeEventListener('keydown', keydownHandler);
+
+  closeHandler = () => {
     closeBigPictureModal();
-    document.removeEventListener('keydown', closeHandler);
-    closeBigPicture.removeEventListener('click', closeHandler);
   };
 
-  const keydownHandler = (evt) => {
+  keydownHandler = (evt) => {
     if (evt.keyCode === 27) {
       closeBigPictureModal();
-      removeLoadMoreCommentsHandler();
-      document.removeEventListener('keydown', keydownHandler);
-      closeBigPicture.removeEventListener('click', closeHandler);
     }
   };
 
   closeBigPicture.addEventListener('click', closeHandler);
   document.addEventListener('keydown', keydownHandler);
 };
-const showPhoto = function (data) {
+
+
+const showPhoto = (data) => {
   photoData = data;
   pictureItems = document.querySelectorAll('.picture');
   addEventListeners();
-  addCloseEventListeners();
 };
 
 export { showPhoto, openBigPictureModal, closeBigPictureModal };

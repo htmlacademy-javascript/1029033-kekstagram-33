@@ -1,24 +1,18 @@
 import { addingPhoto } from './photo-generation.js';
 import { showPhoto } from './big-picture.js';
-import { showFilter, filterClick } from './filter.js';
+import { showFilter, changeFilterButton } from './filter.js';
 
 const body = document.querySelector('body');
 const uploadForm = document.querySelector('.img-upload__form');
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorLoadingTemplate = document.querySelector('#data-error').content.querySelector('.data-error');
-let successModalElement;
-let errorModalElement;
-let errorLoadingElement;
 const filterDefaultDOMElement = document.getElementById('filter-default');
 const filterRandomDOMElement = document.getElementById('filter-random');
 const filterDiscussedDOMElement = document.getElementById('filter-discussed');
-
-
-const additionSuccessForm = () => {
-  successModalElement = successTemplate.cloneNode(true);
-  body.appendChild(successModalElement);
-};
+let successModalElement;
+let errorModalElement;
+let errorLoadingElement;
 
 const closeOnClickForm = () => {
   if (successModalElement) {
@@ -27,11 +21,25 @@ const closeOnClickForm = () => {
   }
 };
 
-const closeOnClickSuccess = (evt) => {
-  if (successModalElement && !successModalElement.contains(evt.target)) {
-    closeOnClickForm();
-  }
+
+const closeOnClickBody = () => {
+  const successDOMElement = document.querySelector('.success');
+  successDOMElement.addEventListener('click', (evt) => {
+    if (!evt.target.classList.contains('success__inner') && !evt.target.classList.contains('success__title')) {
+      closeOnClickForm();
+    }
+  });
+
+  document.removeEventListener('click', closeOnClickBody);
 };
+
+
+const additionSuccessForm = () => {
+  successModalElement = successTemplate.cloneNode(true);
+  body.appendChild(successModalElement);
+  body.addEventListener('click', closeOnClickBody);
+};
+
 
 const closeOnEscSuccess = (evt) => {
   if ((evt.key === 'Escape' || evt.keyCode === 27) && successModalElement) {
@@ -46,9 +54,8 @@ const closeEventListenersSuccess = () => {
     closeSuccessFormBtn.addEventListener('click', closeOnClickForm);
   }
   document.addEventListener('keydown', closeOnEscSuccess);
-  body.addEventListener('click', closeOnClickSuccess);
+  body.addEventListener('click', closeOnClickBody);
 };
-
 
 const additionErrorForm = (formData) => {
   errorModalElement = errorTemplate.cloneNode(true);
@@ -68,7 +75,7 @@ const additionErrorForm = (formData) => {
   }
   const errorDOMElement = document.querySelector('.error');
   errorDOMElement.addEventListener('click', (evt) => {
-    if (!evt.target.classList.contains('error__inner')) {
+    if (!evt.target.classList.contains('error__inner') && !evt.target.classList.contains('error__title')) {
       closeErrorForm();
     }
   });
@@ -77,7 +84,6 @@ const additionErrorForm = (formData) => {
   uploadForm.querySelector('.text__hashtags').value = formData.hashtags;
   uploadForm.querySelector('.text__description').value = formData.description;
 };
-
 
 const openErrorLoadingForm = () => {
   errorLoadingElement = errorLoadingTemplate.cloneNode(true);
@@ -116,7 +122,7 @@ const getData = () => {
 
       showPhoto(data);
       showFilter();
-      filterClick();
+      changeFilterButton();
     })
     .catch(() => {
       openErrorLoadingForm();
@@ -143,7 +149,7 @@ const sendingData = (onSuccess) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
 
-    fetch('ывывhttps://32.javascript.htmlacademy.pro/kekstagram', {
+    fetch('https://32.javascript.htmlacademy.pro/kekstagram', {
       method: 'POST',
       body: formData,
     })
@@ -170,5 +176,6 @@ const sendingData = (onSuccess) => {
       });
   });
 };
+
 
 export { getData, sendingData };
