@@ -14,6 +14,20 @@ const previewImageDOMElement = uploadPreview.querySelector('.img-upload__preview
 const effectPreviewsDOMElement = uploadPreview.querySelectorAll('.effects__preview');
 const buttonSubmitDOMElement = document.querySelector('.img-upload__submit');
 
+const clickCloseForm = () => {
+  openForm.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.querySelector('.img-upload__form').reset();
+
+  document.removeEventListener('keydown', onEscKeydown);
+};
+
+function onEscKeydown(evt) {
+  if (evt.key === 'Escape' && !document.querySelector('.error') &&
+    !(document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
+    clickCloseForm();
+  }
+}
 
 const showImagePreview = () => {
   const file = uploadInputDOMElement.files[0];
@@ -23,17 +37,13 @@ const showImagePreview = () => {
     reader.onload = function (evt) {
       const imageUrl = evt.target.result;
 
-
       previewImageDOMElement.src = imageUrl;
 
-
       effectPreviewsDOMElement.forEach((preview) => {
-
         const img = preview.querySelector('img');
         if (img) {
           img.src = imageUrl;
         } else {
-
           preview.style.backgroundImage = `url(${imageUrl})`;
         }
       });
@@ -43,34 +53,21 @@ const showImagePreview = () => {
   }
 };
 
+
 const registerHendlerModalForm = () => {
   uploadInputDOMElement.addEventListener('change', () => {
     openForm.classList.remove('hidden');
     body.classList.add('modal-open');
     showImagePreview();
+
+    document.removeEventListener('keydown', onEscKeydown);
+    document.addEventListener('keydown', onEscKeydown);
   });
 };
 
-const clickCloseForm = () => {
-  openForm.classList.add('hidden');
-  body.classList.remove('modal-open');
-  document.querySelector('.img-upload__form').reset();
-
-};
 
 const registerCloseEventListeners = () => {
-  closeFormDOMElement.addEventListener('click', () => {
-    clickCloseForm();
-  });
-
-  document.addEventListener('keydown', (evt) => {
-
-    if (evt.key === 'Escape' && document.querySelector('.error') || (document.activeElement === textHashtagsDOMElement || document.activeElement === textDescriptionDOMElement)) {
-      evt.stopPropagation();
-    } else if (evt.key === 'Escape') {
-      clickCloseForm();
-    }
-  });
+  closeFormDOMElement.addEventListener('click', clickCloseForm);
 };
 
 const validateHashtags = (value) => {
@@ -95,6 +92,7 @@ const validateHashtags = (value) => {
   return hashtags.every((tag) => hashtagPattern.test(tag));
 };
 
+
 const validateComment = (value) => {
   if (!value.trim()) {
     return true;
@@ -102,6 +100,7 @@ const validateComment = (value) => {
 
   return value.length <= COMMENTS_ERROR_LENGTH;
 };
+
 
 const pristine = new Pristine(formDOMElement, {
   classTo: 'img-upload__field-wrapper',
@@ -123,24 +122,12 @@ pristine.addValidator(
   2
 );
 
-formDOMElement.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
-    return 'Форма валидна, можно отправлять';
-
-  } else {
-    return 'Форма не валидна';
-  }
-});
-
 const toggleSubmitButton = () => {
   buttonSubmitDOMElement.disabled = !pristine.validate();
 };
 
 formDOMElement.addEventListener('input', toggleSubmitButton);
 
-toggleSubmitButton();
 
 formDOMElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
@@ -152,4 +139,4 @@ formDOMElement.addEventListener('submit', (evt) => {
   }
 });
 
-export { registerHendlerModalForm, clickCloseForm, registerCloseEventListeners };
+export { registerHendlerModalForm, registerCloseEventListeners, clickCloseForm };

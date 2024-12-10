@@ -8,5 +8,6 @@ getData();
 sendingData(clickCloseForm);
 registerHendlerModalForm();
 registerCloseEventListeners();
+clickCloseForm();
 changeImageScale();
 overlayEffect();
