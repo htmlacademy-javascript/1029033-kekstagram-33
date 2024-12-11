@@ -88,29 +88,12 @@ const handleLoadMoreComments = () => {
   loadMoreCommentsHandler();
 };
 
-const openBigPictureModal = () => {
-  bigPicture.classList.remove('hidden');
-  body.classList.add('modal-open');
-  addCloseEventListeners();
-};
-
 const closeBigPictureModal = () => {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
   removeLoadMoreCommentsHandler();
   closeBigPicture.removeEventListener('click', closeHandler);
   document.removeEventListener('keydown', keydownHandler);
-};
-
-const addEventListeners = () => {
-  pictureItems.forEach((pictureItem, index) => {
-    pictureItem.addEventListener('click', () => {
-      const photo = photoData[index];
-      renderBigPicture(photo);
-      handleLoadMoreComments();
-      openBigPictureModal();
-    });
-  });
 };
 
 const addCloseEventListeners = () => {
@@ -129,6 +112,23 @@ const addCloseEventListeners = () => {
 
   closeBigPicture.addEventListener('click', closeHandler);
   document.addEventListener('keydown', keydownHandler);
+};
+
+const openBigPictureModal = () => {
+  bigPicture.classList.remove('hidden');
+  body.classList.add('modal-open');
+  addCloseEventListeners();
+};
+
+const addEventListeners = () => {
+  pictureItems.forEach((pictureItem, index) => {
+    pictureItem.addEventListener('click', () => {
+      const photo = photoData[index];
+      renderBigPicture(photo);
+      handleLoadMoreComments();
+      openBigPictureModal();
+    });
+  });
 };
 
 
